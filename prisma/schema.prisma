@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+  // For crate folder generate
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int             @id @default(autoincrement()) //uuid is encrypt id
+  userName   String          @unique
+  password   String          @db.VarChar(255)
+  firstName  String          @db.VarChar(255)
+  lastName   String          @db.VarChar(255)
+  createAt   DateTime        @default(now()) @db.Timestamp(0)
+  updateAt   DateTime        @updatedAt @db.Timestamp(0)
+  phoneNo    String          @unique @db.VarChar(10)
+  email      String          @unique @db.VarChar(100)
+  role       Role            @default(USER)
+  department String          @db.VarChar(255)
+  project    UserOnProject[]
+  Task       Task?           @relation(fields: [taskId], references: [id])
+  taskId     Int?
+}
+
+enum Role {
+  USER
+  LEADER
+  ADMIN
+}
+
+model ProjectList {
+  id       Int             @id @default(autoincrement())
+  user     UserOnProject[]
+  name     String
+  priority Int
+  detail   String          @db.VarChar(255)
+  createAt DateTime        @default(now()) @db.Timestamp(0)
+  updateAt DateTime        @updatedAt @db.Timestamp(0)
+  assignor Int
+  dueDate  DateTime
+  task     Task[]
+}
+
+model UserOnProject {
+  ProjectList   ProjectList @relation(fields: [projectListId], references: [id])
+  projectListId Int
+  User          User        @relation(fields: [userId], references: [id])
+  userId        Int
+
+  @@id([projectListId, userId])
+}
+
+model Task {
+  id            Int         @id @default(autoincrement())
+  detail        String
+  createAt      DateTime    @default(now()) @db.Timestamp(0)
+  updateAt      DateTime    @updatedAt @db.Timestamp(0)
+  status        Status[]
+  ProjectList   ProjectList @relation(fields: [projectListId], references: [id])
+  projectListId Int
+  assignTo      User[]
+}
+
+model Status {
+  id            Int           @id @default(autoincrement())
+  taskStatus    TaskStatus    @default(ONGOING)
+  projectStatus ProjectStatus @default(ONGOING)
+  createAt      DateTime      @default(now()) @db.Timestamp(0)
+  updateAt      DateTime      @updatedAt @db.Timestamp(0)
+  feedback      String?
+  attachFile    String?
+  Task          Task          @relation(fields: [taskId], references: [id])
+  taskId        Int
+}
+
+enum TaskStatus {
+  ONGOING
+  COMPLETED
+  APPROVE
+  REJECT
+}
+
+enum ProjectStatus {
+  ONGOING
+  COMPLETED
+  PENDING
+  OVERDUE
+}
