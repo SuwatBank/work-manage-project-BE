@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import createError from "../utils/create.error.util.js";
 import { createUser, getUserBy } from "../services/user.service.js";
+import { tr } from "@faker-js/faker";
 
 
 export async function register(req, res, next) {
@@ -88,47 +89,71 @@ export async function getMe(req, res, next) {
 
 
 export const getALLUsers = async (req, res, next) => {
+  // console.log('getall', getall)
   const result = await prisma.user.findMany({
-    orderBy: {createAt: "desc"}
+    orderBy: { createAt: "desc" }
   })
-  res.json({users: result})
+  console.log(result)
+  res.json({ users: result })
 }
 
 export const getMembers = async (req, res, next) => {
-  const {department} = req.params
+  const { department } = req.params
   const result = await prisma.user.findMany({
-    where: {department: department}
+    where: { department: department }
   })
-  res.json({users: result})
+  res.json({ users: result })
+}
+
+export const getUserId = async (req, res, next) => {
+  const { id } = req.params
+  const result = await prisma.user.findUnique({
+    where: { id: +id },
+    omit: {
+      userName: true,
+      password: true
+
+    }
+  })
+  res.json({ Edituser: result })
+
 }
 
 export const deleteUser = async (req, res, next) => {
-  const {id} = req.params
-  // console.log(id)
-  const findUser = await prisma.user.findUnique({
-    where: {id: Number(id)}
-  })
+  try {
 
-  if(!findUser) {
-    createError(400, "Id not found")
+    const { id } = req.params
+    // console.log(id)
+    const findUser = await prisma.user.findUnique({
+      where: { id: Number(id) }
+    })
+
+    if (!findUser) {
+      createError(400, "Id not found")
+    }
+    
+    const result = await prisma.user.delete({ where: { id: Number(id) } })
+    console.log(result)
+    res.json({ message: "Delete this user is done" })
+    
+  } catch (error) {
+    console.log(error)
+    next(error)
   }
-
-  const result = await prisma.user.delete({where: {id: Number(id)}})
-  console.log(result)
-  res.json({message: "Delete this user is done"})
 }
 
 export const editUser = async (req, res, next) => {
-  const {id} = req.params
+  const { id } = req.params
+  console.log(req.body)
   const { firstName, lastName, department, email, role, phoneNo } = req.body
-  const findUser = await prisma.user.findUnique({where: {id: Number(id)}})
-  if(!findUser){
+  const findUser = await prisma.user.findUnique({ where: { id: Number(id) } })
+  if (!findUser) {
     createError(400, "Cannot edit this user")
   }
   const response = await prisma.user.update({
-    where: {id: Number(id)},
-    data : {firstName, lastName, department, email, role, phoneNo}
+    where: { id: Number(id) },
+    data: { firstName, lastName, department, email, role, phoneNo }
   })
 
-  res.json({message: `Update data to user : ${response.userName} completed`})
+  res.json({ message: `Update data to user : ${response.userName} completed` })
 }

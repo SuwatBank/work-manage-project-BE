@@ -10,6 +10,7 @@ authRouter.post("/login", validate(loginSchema), authController.login)
 authRouter.get("/me",authenMiddleware, authController.getMe)
 authRouter.get("/getUsers",authenMiddleware, authController.getALLUsers)
 authRouter.get("/getMembers/:department",authenMiddleware, authController.getMembers)
+authRouter.get("/getUserId/:id",authenMiddleware, authController.getUserId)
 authRouter.delete("/user/:id", authController.deleteUser)
 authRouter.patch("/user/:id", authController.editUser)
 

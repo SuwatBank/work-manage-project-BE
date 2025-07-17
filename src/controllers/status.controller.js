@@ -1,7 +1,6 @@
 import prisma from "../config/prisma.config.js";
 import createError from "../utils/create.error.util.js";
 
-
 export const getAllStatus = async (req, res, next) => {
   const { id } = req.params
   const result = await prisma.status.findMany({

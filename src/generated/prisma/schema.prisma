@@ -24,6 +24,7 @@ model User {
   project    UserOnProject[]
   Task       Task?           @relation(fields: [taskId], references: [id])
   taskId     Int?
+  UserOnTask UserOnTask[]
 }
 
 enum Role {
@@ -48,21 +49,34 @@ model ProjectList {
 model UserOnProject {
   ProjectList   ProjectList @relation(fields: [projectListId], references: [id])
   projectListId Int
-  User          User        @relation(fields: [userId], references: [id])
+  User          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
 
   @@id([projectListId, userId])
 }
 
 model Task {
-  id            Int         @id @default(autoincrement())
+  id            Int          @id @default(autoincrement())
+  name          String
   detail        String
-  createAt      DateTime    @default(now()) @db.Timestamp(0)
-  updateAt      DateTime    @updatedAt @db.Timestamp(0)
+  priority      Int
+  createAt      DateTime     @default(now()) @db.Timestamp(0)
+  updateAt      DateTime     @updatedAt @db.Timestamp(0)
+  dueDate       DateTime
   status        Status[]
-  ProjectList   ProjectList @relation(fields: [projectListId], references: [id])
+  ProjectList   ProjectList  @relation(fields: [projectListId], references: [id])
   projectListId Int
-  assignTo      User[]
+  assignTo      UserOnTask[]
+  User          User[]
+}
+
+model UserOnTask {
+  Task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
+  User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  @@id([taskId, userId])
 }
 
 model Status {
@@ -79,6 +93,7 @@ model Status {
 
 enum TaskStatus {
   ONGOING
+  ONAPPROVE
   COMPLETED
   APPROVE
   REJECT

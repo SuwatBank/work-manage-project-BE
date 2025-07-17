@@ -4,6 +4,6 @@ const taskRouter = express.Router()
 
 taskRouter.get("/getTasks/:id", taskController.getAllTask)
 taskRouter.post("/createTask/:id", taskController.createTask)
-taskRouter.get("/removeTask", taskController.createTask)
+taskRouter.patch("/submitTask/:id", taskController.submitTask)
 
 export default taskRouter

@@ -7,16 +7,16 @@ export default async function (req,res,next) {
   if(!authorization) {
     createError(401, "Have no authorization header")
   }
-
+  
   const token = authorization.split(" ")[1]
-
+  
   if(!token){
     createError(401, "Unauthorized")
   }
-
+  
   const payload = jwt.verify(token, process.env.JWT_SECRET);
   const checkUser = await getUserBy("id", payload.id)
-
+  
   if(!checkUser){
     createError(401, "Unauthorized")
   }

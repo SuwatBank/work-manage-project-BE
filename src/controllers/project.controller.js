@@ -17,20 +17,63 @@ export const getProject = async (req, res, next) => {
     include: {
       ProjectList: true
     }
-
   })
 
-  // if(!sortProject || sortProject.user.userId !== id) {
-  //   createError(400, "Cannot get this project")
-  // }
+  const data = sortProject.map(item => item.ProjectList)
 
+  console.log('sortProject', sortProject)
   res.json({
-    result: sortProject
+    result: data
+  })
+}
+
+export const projectNearDue = async (req, res, next) => {
+  const { id } = req.params;
+  const sortProject = await prisma.userOnProject.findMany({
+    where: {
+      userId: +id,
+    },
+    include: {
+      ProjectList: true,
+    },
+    orderBy: {
+      ProjectList: {
+        dueDate: 'asc'
+      },
+    },
+    take: 3,
+  });
+
+  const data = sortProject.map(item => item.ProjectList)
+  res.json({
+    result: data
+  })
+}
+export const newComingProject = async (req, res, next) => {
+  const { id } = req.params;
+  const sortProject = await prisma.userOnProject.findMany({
+    where: {
+      userId: +id,
+    },
+    include: {
+      ProjectList: true,
+    },
+    orderBy: {
+      ProjectList: {
+        createAt: 'desc'
+      },
+    },
+    take: 3,
+  });
+
+  const data = sortProject.map(item => item.ProjectList)
+  res.json({
+    result: data
   })
 }
 
 export const assignProject = async (req, res, next) => {
-  const {id} = req.params
+  const { id } = req.params
   const projects = await prisma.projectList.findMany({
     where: {
       assignor: +id
@@ -42,13 +85,10 @@ export const assignProject = async (req, res, next) => {
 }
 
 export const createProject = async (req, res, next) => {
-  console.log("object");
   try {
     console.log('req.body', req.body)
     const { detail, dueDate, priority, name, userIds } = req.body;
-
     const { role, id } = req.params;
-    // console.log("Role", role)
     if (role !== "leader") {
       createError(401, "Unauthorized")
     }
@@ -63,9 +103,8 @@ export const createProject = async (req, res, next) => {
       }
     })
 
-    console.log('userIds', userIds)
-
     if (userIds.length > 0) {
+      console.log("UserID", userIds)
       const connections = userIds.map((userId) => ({
         projectListId: project.id,
         userId: +userId
