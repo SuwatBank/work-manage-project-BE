@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken"
 import createError from "../utils/create.error.util.js";
 import { createUser, getUserBy } from "../services/user.service.js";
 import { tr } from "@faker-js/faker";
+import cookieParser from "cookie-parser";
 
 
 export async function register(req, res, next) {
@@ -46,7 +47,6 @@ export async function register(req, res, next) {
 }
 
 export async function login(req, res, next) {
-
   try {
     const { userName, password } = req.body;
     console.log("Reqbody", req.body)
@@ -86,7 +86,6 @@ export async function login(req, res, next) {
 export async function getMe(req, res, next) {
   res.json({ user: req.user })
 }
-
 
 export const getALLUsers = async (req, res, next) => {
   // console.log('getall', getall)

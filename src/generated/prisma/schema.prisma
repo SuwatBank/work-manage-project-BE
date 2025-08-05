@@ -10,7 +10,7 @@ datasource db {
 }
 
 model User {
-  id         Int             @id @default(autoincrement()) //uuid is encrypt id
+  id         Int             @id @default(autoincrement())
   userName   String          @unique
   password   String          @db.VarChar(255)
   firstName  String          @db.VarChar(255)
@@ -22,7 +22,7 @@ model User {
   role       Role            @default(USER)
   department String          @db.VarChar(255)
   project    UserOnProject[]
-  Task       Task?           @relation(fields: [taskId], references: [id])
+  Task       Task?           @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId     Int?
   UserOnTask UserOnTask[]
 }
@@ -47,7 +47,7 @@ model ProjectList {
 }
 
 model UserOnProject {
-  ProjectList   ProjectList @relation(fields: [projectListId], references: [id])
+  ProjectList   ProjectList @relation(fields: [projectListId], references: [id], onDelete: Cascade)
   projectListId Int
   User          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
@@ -64,7 +64,7 @@ model Task {
   updateAt      DateTime     @updatedAt @db.Timestamp(0)
   dueDate       DateTime
   status        Status[]
-  ProjectList   ProjectList  @relation(fields: [projectListId], references: [id])
+  ProjectList   ProjectList  @relation(fields: [projectListId], references: [id], onDelete: Cascade)
   projectListId Int
   assignTo      UserOnTask[]
   User          User[]
@@ -87,7 +87,7 @@ model Status {
   updateAt      DateTime      @updatedAt @db.Timestamp(0)
   feedback      String?
   attachFile    String?
-  Task          Task          @relation(fields: [taskId], references: [id])
+  Task          Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId        Int
 }
 

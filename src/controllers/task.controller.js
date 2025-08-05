@@ -2,7 +2,7 @@ import prisma from "../config/prisma.config.js";
 import createError from "../utils/create.error.util.js";
 
 export const getAllTask = async(req, res, next) => {
-  const { id } = req.params
+  const { id } = req.params;
   const result = await prisma.task.findMany({
     where : {
       projectListId: +id
@@ -96,3 +96,89 @@ export const submitTask = async(req, res, next) => {
     console.log(error)
   }
 }
+
+export const deleteTask = async(req, res, next) => {
+  try {
+    const {id} = req.params;
+    const findTask = await prisma.task.findUnique({
+      where: {id: +id}
+    })
+
+    if(!findTask){
+      createError(400, "Cannot delete post")
+    }
+
+    const response = await prisma.task.delete({
+      where : {id: +id}
+    })
+
+    res.json(
+      {message: "Delete task complete"},
+      {response: response}
+    )
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// export const submitTaskList = async(req, res, next) => {
+//   try {
+//     const {id} = req.params;
+//     const projectList = await prisma.userOnProject.findMany({
+//       where : {userId: +id}
+//     })
+//     const [projects] = projectList
+//     console.log(projects);
+//     const result = await prisma.task.findMany({
+//       where : {
+//         projectListId: +projects.projectListId,
+//       },
+//       include : {
+//         status : {
+//           where : {
+//             taskStatus: "ONAPPROVE"
+//           }
+//         },
+//       }
+//     })
+//     res.json(
+//       {result: result}
+//     )
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
+export const submitTaskList = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Get all projectListIds the user is assigned to
+    const projectList = await prisma.userOnProject.findMany({
+      where: { userId: +id },
+      select: { projectListId: true }
+    });
+
+    const projectListIds = projectList.map(p => p.projectListId);
+
+    const result = await prisma.task.findMany({
+      where: {
+        projectListId: { in: projectListIds },
+        status: {
+          some: {
+            taskStatus: 'ONAPPROVE'
+          }
+        }
+      },
+      include: {
+        status: true,
+        // ProjectList: true, // optional: if you want project data too
+      }
+    });
+
+    res.json({ result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
