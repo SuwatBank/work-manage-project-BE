@@ -1,4 +1,5 @@
 export default function (err, req, res, next) {
-  const statusCode = err.statusCode || 500
+  console.log(err);
+  const statusCode = err.code || 401
   res.status(statusCode).json({error: err.message})
 }

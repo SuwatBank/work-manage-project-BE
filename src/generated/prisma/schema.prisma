@@ -34,16 +34,17 @@ enum Role {
 }
 
 model ProjectList {
-  id       Int             @id @default(autoincrement())
-  user     UserOnProject[]
-  name     String
-  priority Int
-  detail   String          @db.VarChar(255)
-  createAt DateTime        @default(now()) @db.Timestamp(0)
-  updateAt DateTime        @updatedAt @db.Timestamp(0)
-  assignor Int
-  dueDate  DateTime
-  task     Task[]
+  id            Int             @id @default(autoincrement())
+  user          UserOnProject[]
+  name          String
+  priority      Int
+  projectStatus ProjectStatus   @default(ONGOING)
+  detail        String          @db.VarChar(255)
+  createAt      DateTime        @default(now()) @db.Timestamp(0)
+  updateAt      DateTime        @updatedAt @db.Timestamp(0)
+  assignor      Int
+  dueDate       DateTime
+  task          Task[]
 }
 
 model UserOnProject {
@@ -80,15 +81,14 @@ model UserOnTask {
 }
 
 model Status {
-  id            Int           @id @default(autoincrement())
-  taskStatus    TaskStatus    @default(ONGOING)
-  projectStatus ProjectStatus @default(ONGOING)
-  createAt      DateTime      @default(now()) @db.Timestamp(0)
-  updateAt      DateTime      @updatedAt @db.Timestamp(0)
-  feedback      String?
-  attachFile    String?
-  Task          Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  taskId        Int
+  id         Int        @id @default(autoincrement())
+  taskStatus TaskStatus @default(ONGOING)
+  createAt   DateTime   @default(now()) @db.Timestamp(0)
+  updateAt   DateTime   @updatedAt @db.Timestamp(0)
+  feedback   String?
+  attachFile String?
+  Task       Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId     Int
 }
 
 enum TaskStatus {

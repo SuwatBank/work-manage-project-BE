@@ -2600,6 +2600,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     priority: number | null
+    projectStatus: $Enums.ProjectStatus | null
     detail: string | null
     createAt: Date | null
     updateAt: Date | null
@@ -2611,6 +2612,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     priority: number | null
+    projectStatus: $Enums.ProjectStatus | null
     detail: string | null
     createAt: Date | null
     updateAt: Date | null
@@ -2622,6 +2624,7 @@ export namespace Prisma {
     id: number
     name: number
     priority: number
+    projectStatus: number
     detail: number
     createAt: number
     updateAt: number
@@ -2647,6 +2650,7 @@ export namespace Prisma {
     id?: true
     name?: true
     priority?: true
+    projectStatus?: true
     detail?: true
     createAt?: true
     updateAt?: true
@@ -2658,6 +2662,7 @@ export namespace Prisma {
     id?: true
     name?: true
     priority?: true
+    projectStatus?: true
     detail?: true
     createAt?: true
     updateAt?: true
@@ -2669,6 +2674,7 @@ export namespace Prisma {
     id?: true
     name?: true
     priority?: true
+    projectStatus?: true
     detail?: true
     createAt?: true
     updateAt?: true
@@ -2767,6 +2773,7 @@ export namespace Prisma {
     id: number
     name: string
     priority: number
+    projectStatus: $Enums.ProjectStatus
     detail: string
     createAt: Date
     updateAt: Date
@@ -2797,6 +2804,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     priority?: boolean
+    projectStatus?: boolean
     detail?: boolean
     createAt?: boolean
     updateAt?: boolean
@@ -2813,6 +2821,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     priority?: boolean
+    projectStatus?: boolean
     detail?: boolean
     createAt?: boolean
     updateAt?: boolean
@@ -2820,7 +2829,7 @@ export namespace Prisma {
     dueDate?: boolean
   }
 
-  export type ProjectListOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "priority" | "detail" | "createAt" | "updateAt" | "assignor" | "dueDate", ExtArgs["result"]["projectList"]>
+  export type ProjectListOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "priority" | "projectStatus" | "detail" | "createAt" | "updateAt" | "assignor" | "dueDate", ExtArgs["result"]["projectList"]>
   export type ProjectListInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | ProjectList$userArgs<ExtArgs>
     task?: boolean | ProjectList$taskArgs<ExtArgs>
@@ -2837,6 +2846,7 @@ export namespace Prisma {
       id: number
       name: string
       priority: number
+      projectStatus: $Enums.ProjectStatus
       detail: string
       createAt: Date
       updateAt: Date
@@ -3216,6 +3226,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ProjectList", 'Int'>
     readonly name: FieldRef<"ProjectList", 'String'>
     readonly priority: FieldRef<"ProjectList", 'Int'>
+    readonly projectStatus: FieldRef<"ProjectList", 'ProjectStatus'>
     readonly detail: FieldRef<"ProjectList", 'String'>
     readonly createAt: FieldRef<"ProjectList", 'DateTime'>
     readonly updateAt: FieldRef<"ProjectList", 'DateTime'>
@@ -6621,7 +6632,6 @@ export namespace Prisma {
   export type StatusMinAggregateOutputType = {
     id: number | null
     taskStatus: $Enums.TaskStatus | null
-    projectStatus: $Enums.ProjectStatus | null
     createAt: Date | null
     updateAt: Date | null
     feedback: string | null
@@ -6632,7 +6642,6 @@ export namespace Prisma {
   export type StatusMaxAggregateOutputType = {
     id: number | null
     taskStatus: $Enums.TaskStatus | null
-    projectStatus: $Enums.ProjectStatus | null
     createAt: Date | null
     updateAt: Date | null
     feedback: string | null
@@ -6643,7 +6652,6 @@ export namespace Prisma {
   export type StatusCountAggregateOutputType = {
     id: number
     taskStatus: number
-    projectStatus: number
     createAt: number
     updateAt: number
     feedback: number
@@ -6666,7 +6674,6 @@ export namespace Prisma {
   export type StatusMinAggregateInputType = {
     id?: true
     taskStatus?: true
-    projectStatus?: true
     createAt?: true
     updateAt?: true
     feedback?: true
@@ -6677,7 +6684,6 @@ export namespace Prisma {
   export type StatusMaxAggregateInputType = {
     id?: true
     taskStatus?: true
-    projectStatus?: true
     createAt?: true
     updateAt?: true
     feedback?: true
@@ -6688,7 +6694,6 @@ export namespace Prisma {
   export type StatusCountAggregateInputType = {
     id?: true
     taskStatus?: true
-    projectStatus?: true
     createAt?: true
     updateAt?: true
     feedback?: true
@@ -6786,7 +6791,6 @@ export namespace Prisma {
   export type StatusGroupByOutputType = {
     id: number
     taskStatus: $Enums.TaskStatus
-    projectStatus: $Enums.ProjectStatus
     createAt: Date
     updateAt: Date
     feedback: string | null
@@ -6816,7 +6820,6 @@ export namespace Prisma {
   export type StatusSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     taskStatus?: boolean
-    projectStatus?: boolean
     createAt?: boolean
     updateAt?: boolean
     feedback?: boolean
@@ -6830,7 +6833,6 @@ export namespace Prisma {
   export type StatusSelectScalar = {
     id?: boolean
     taskStatus?: boolean
-    projectStatus?: boolean
     createAt?: boolean
     updateAt?: boolean
     feedback?: boolean
@@ -6838,7 +6840,7 @@ export namespace Prisma {
     taskId?: boolean
   }
 
-  export type StatusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskStatus" | "projectStatus" | "createAt" | "updateAt" | "feedback" | "attachFile" | "taskId", ExtArgs["result"]["status"]>
+  export type StatusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskStatus" | "createAt" | "updateAt" | "feedback" | "attachFile" | "taskId", ExtArgs["result"]["status"]>
   export type StatusInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Task?: boolean | TaskDefaultArgs<ExtArgs>
   }
@@ -6851,7 +6853,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       taskStatus: $Enums.TaskStatus
-      projectStatus: $Enums.ProjectStatus
       createAt: Date
       updateAt: Date
       feedback: string | null
@@ -7229,7 +7230,6 @@ export namespace Prisma {
   interface StatusFieldRefs {
     readonly id: FieldRef<"Status", 'Int'>
     readonly taskStatus: FieldRef<"Status", 'TaskStatus'>
-    readonly projectStatus: FieldRef<"Status", 'ProjectStatus'>
     readonly createAt: FieldRef<"Status", 'DateTime'>
     readonly updateAt: FieldRef<"Status", 'DateTime'>
     readonly feedback: FieldRef<"Status", 'String'>
@@ -7632,6 +7632,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     priority: 'priority',
+    projectStatus: 'projectStatus',
     detail: 'detail',
     createAt: 'createAt',
     updateAt: 'updateAt',
@@ -7675,7 +7676,6 @@ export namespace Prisma {
   export const StatusScalarFieldEnum: {
     id: 'id',
     taskStatus: 'taskStatus',
-    projectStatus: 'projectStatus',
     createAt: 'createAt',
     updateAt: 'updateAt',
     feedback: 'feedback',
@@ -7773,16 +7773,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'TaskStatus'
+   * Reference to a field of type 'ProjectStatus'
    */
-  export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
+  export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
     
 
 
   /**
-   * Reference to a field of type 'ProjectStatus'
+   * Reference to a field of type 'TaskStatus'
    */
-  export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
+  export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
     
 
 
@@ -7902,6 +7902,7 @@ export namespace Prisma {
     id?: IntFilter<"ProjectList"> | number
     name?: StringFilter<"ProjectList"> | string
     priority?: IntFilter<"ProjectList"> | number
+    projectStatus?: EnumProjectStatusFilter<"ProjectList"> | $Enums.ProjectStatus
     detail?: StringFilter<"ProjectList"> | string
     createAt?: DateTimeFilter<"ProjectList"> | Date | string
     updateAt?: DateTimeFilter<"ProjectList"> | Date | string
@@ -7915,6 +7916,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     priority?: SortOrder
+    projectStatus?: SortOrder
     detail?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
@@ -7932,6 +7934,7 @@ export namespace Prisma {
     NOT?: ProjectListWhereInput | ProjectListWhereInput[]
     name?: StringFilter<"ProjectList"> | string
     priority?: IntFilter<"ProjectList"> | number
+    projectStatus?: EnumProjectStatusFilter<"ProjectList"> | $Enums.ProjectStatus
     detail?: StringFilter<"ProjectList"> | string
     createAt?: DateTimeFilter<"ProjectList"> | Date | string
     updateAt?: DateTimeFilter<"ProjectList"> | Date | string
@@ -7945,6 +7948,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     priority?: SortOrder
+    projectStatus?: SortOrder
     detail?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
@@ -7964,6 +7968,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"ProjectList"> | number
     name?: StringWithAggregatesFilter<"ProjectList"> | string
     priority?: IntWithAggregatesFilter<"ProjectList"> | number
+    projectStatus?: EnumProjectStatusWithAggregatesFilter<"ProjectList"> | $Enums.ProjectStatus
     detail?: StringWithAggregatesFilter<"ProjectList"> | string
     createAt?: DateTimeWithAggregatesFilter<"ProjectList"> | Date | string
     updateAt?: DateTimeWithAggregatesFilter<"ProjectList"> | Date | string
@@ -8151,7 +8156,6 @@ export namespace Prisma {
     NOT?: StatusWhereInput | StatusWhereInput[]
     id?: IntFilter<"Status"> | number
     taskStatus?: EnumTaskStatusFilter<"Status"> | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFilter<"Status"> | $Enums.ProjectStatus
     createAt?: DateTimeFilter<"Status"> | Date | string
     updateAt?: DateTimeFilter<"Status"> | Date | string
     feedback?: StringNullableFilter<"Status"> | string | null
@@ -8163,7 +8167,6 @@ export namespace Prisma {
   export type StatusOrderByWithRelationInput = {
     id?: SortOrder
     taskStatus?: SortOrder
-    projectStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     feedback?: SortOrderInput | SortOrder
@@ -8179,7 +8182,6 @@ export namespace Prisma {
     OR?: StatusWhereInput[]
     NOT?: StatusWhereInput | StatusWhereInput[]
     taskStatus?: EnumTaskStatusFilter<"Status"> | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFilter<"Status"> | $Enums.ProjectStatus
     createAt?: DateTimeFilter<"Status"> | Date | string
     updateAt?: DateTimeFilter<"Status"> | Date | string
     feedback?: StringNullableFilter<"Status"> | string | null
@@ -8191,7 +8193,6 @@ export namespace Prisma {
   export type StatusOrderByWithAggregationInput = {
     id?: SortOrder
     taskStatus?: SortOrder
-    projectStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     feedback?: SortOrderInput | SortOrder
@@ -8210,7 +8211,6 @@ export namespace Prisma {
     NOT?: StatusScalarWhereWithAggregatesInput | StatusScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Status"> | number
     taskStatus?: EnumTaskStatusWithAggregatesFilter<"Status"> | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusWithAggregatesFilter<"Status"> | $Enums.ProjectStatus
     createAt?: DateTimeWithAggregatesFilter<"Status"> | Date | string
     updateAt?: DateTimeWithAggregatesFilter<"Status"> | Date | string
     feedback?: StringNullableWithAggregatesFilter<"Status"> | string | null
@@ -8330,6 +8330,7 @@ export namespace Prisma {
   export type ProjectListCreateInput = {
     name: string
     priority: number
+    projectStatus?: $Enums.ProjectStatus
     detail: string
     createAt?: Date | string
     updateAt?: Date | string
@@ -8343,6 +8344,7 @@ export namespace Prisma {
     id?: number
     name: string
     priority: number
+    projectStatus?: $Enums.ProjectStatus
     detail: string
     createAt?: Date | string
     updateAt?: Date | string
@@ -8355,6 +8357,7 @@ export namespace Prisma {
   export type ProjectListUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8368,6 +8371,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8381,6 +8385,7 @@ export namespace Prisma {
     id?: number
     name: string
     priority: number
+    projectStatus?: $Enums.ProjectStatus
     detail: string
     createAt?: Date | string
     updateAt?: Date | string
@@ -8391,6 +8396,7 @@ export namespace Prisma {
   export type ProjectListUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8402,6 +8408,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8564,7 +8571,6 @@ export namespace Prisma {
 
   export type StatusCreateInput = {
     taskStatus?: $Enums.TaskStatus
-    projectStatus?: $Enums.ProjectStatus
     createAt?: Date | string
     updateAt?: Date | string
     feedback?: string | null
@@ -8575,7 +8581,6 @@ export namespace Prisma {
   export type StatusUncheckedCreateInput = {
     id?: number
     taskStatus?: $Enums.TaskStatus
-    projectStatus?: $Enums.ProjectStatus
     createAt?: Date | string
     updateAt?: Date | string
     feedback?: string | null
@@ -8585,7 +8590,6 @@ export namespace Prisma {
 
   export type StatusUpdateInput = {
     taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8596,7 +8600,6 @@ export namespace Prisma {
   export type StatusUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8607,7 +8610,6 @@ export namespace Prisma {
   export type StatusCreateManyInput = {
     id?: number
     taskStatus?: $Enums.TaskStatus
-    projectStatus?: $Enums.ProjectStatus
     createAt?: Date | string
     updateAt?: Date | string
     feedback?: string | null
@@ -8617,7 +8619,6 @@ export namespace Prisma {
 
   export type StatusUpdateManyMutationInput = {
     taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8627,7 +8628,6 @@ export namespace Prisma {
   export type StatusUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8855,6 +8855,13 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type EnumProjectStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectStatus[]
+    notIn?: $Enums.ProjectStatus[]
+    not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
+  }
+
   export type TaskListRelationFilter = {
     every?: TaskWhereInput
     some?: TaskWhereInput
@@ -8875,6 +8882,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     priority?: SortOrder
+    projectStatus?: SortOrder
     detail?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
@@ -8892,6 +8900,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     priority?: SortOrder
+    projectStatus?: SortOrder
     detail?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
@@ -8903,6 +8912,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     priority?: SortOrder
+    projectStatus?: SortOrder
     detail?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
@@ -8914,6 +8924,16 @@ export namespace Prisma {
     id?: SortOrder
     priority?: SortOrder
     assignor?: SortOrder
+  }
+
+  export type EnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectStatus[]
+    notIn?: $Enums.ProjectStatus[]
+    not?: NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProjectStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProjectStatusFilter<$PrismaModel>
+    _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
   export type ProjectListScalarRelationFilter = {
@@ -9069,13 +9089,6 @@ export namespace Prisma {
     not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
   }
 
-  export type EnumProjectStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ProjectStatus[]
-    notIn?: $Enums.ProjectStatus[]
-    not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -9100,7 +9113,6 @@ export namespace Prisma {
   export type StatusCountOrderByAggregateInput = {
     id?: SortOrder
     taskStatus?: SortOrder
-    projectStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     feedback?: SortOrder
@@ -9116,7 +9128,6 @@ export namespace Prisma {
   export type StatusMaxOrderByAggregateInput = {
     id?: SortOrder
     taskStatus?: SortOrder
-    projectStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     feedback?: SortOrder
@@ -9127,7 +9138,6 @@ export namespace Prisma {
   export type StatusMinOrderByAggregateInput = {
     id?: SortOrder
     taskStatus?: SortOrder
-    projectStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     feedback?: SortOrder
@@ -9148,16 +9158,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTaskStatusFilter<$PrismaModel>
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
-  }
-
-  export type EnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ProjectStatus[]
-    notIn?: $Enums.ProjectStatus[]
-    not?: NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProjectStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumProjectStatusFilter<$PrismaModel>
-    _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9332,6 +9332,10 @@ export namespace Prisma {
     connectOrCreate?: TaskCreateOrConnectWithoutProjectListInput | TaskCreateOrConnectWithoutProjectListInput[]
     createMany?: TaskCreateManyProjectListInputEnvelope
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type EnumProjectStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ProjectStatus
   }
 
   export type UserOnProjectUpdateManyWithoutProjectListNestedInput = {
@@ -9596,10 +9600,6 @@ export namespace Prisma {
     set?: $Enums.TaskStatus
   }
 
-  export type EnumProjectStatusFieldUpdateOperationsInput = {
-    set?: $Enums.ProjectStatus
-  }
-
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -9763,18 +9763,28 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TaskStatus[]
-    notIn?: $Enums.TaskStatus[]
-    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
-  }
-
   export type NestedEnumProjectStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
     in?: $Enums.ProjectStatus[]
     notIn?: $Enums.ProjectStatus[]
     not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
+  }
+
+  export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectStatus[]
+    notIn?: $Enums.ProjectStatus[]
+    not?: NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProjectStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProjectStatusFilter<$PrismaModel>
+    _max?: NestedEnumProjectStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[]
+    notIn?: $Enums.TaskStatus[]
+    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
@@ -9800,16 +9810,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTaskStatusFilter<$PrismaModel>
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
-  }
-
-  export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ProjectStatus[]
-    notIn?: $Enums.ProjectStatus[]
-    not?: NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProjectStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumProjectStatusFilter<$PrismaModel>
-    _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10082,6 +10082,7 @@ export namespace Prisma {
   export type ProjectListCreateWithoutUserInput = {
     name: string
     priority: number
+    projectStatus?: $Enums.ProjectStatus
     detail: string
     createAt?: Date | string
     updateAt?: Date | string
@@ -10094,6 +10095,7 @@ export namespace Prisma {
     id?: number
     name: string
     priority: number
+    projectStatus?: $Enums.ProjectStatus
     detail: string
     createAt?: Date | string
     updateAt?: Date | string
@@ -10157,6 +10159,7 @@ export namespace Prisma {
   export type ProjectListUpdateWithoutUserInput = {
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10169,6 +10172,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10221,7 +10225,6 @@ export namespace Prisma {
 
   export type StatusCreateWithoutTaskInput = {
     taskStatus?: $Enums.TaskStatus
-    projectStatus?: $Enums.ProjectStatus
     createAt?: Date | string
     updateAt?: Date | string
     feedback?: string | null
@@ -10231,7 +10234,6 @@ export namespace Prisma {
   export type StatusUncheckedCreateWithoutTaskInput = {
     id?: number
     taskStatus?: $Enums.TaskStatus
-    projectStatus?: $Enums.ProjectStatus
     createAt?: Date | string
     updateAt?: Date | string
     feedback?: string | null
@@ -10251,6 +10253,7 @@ export namespace Prisma {
   export type ProjectListCreateWithoutTaskInput = {
     name: string
     priority: number
+    projectStatus?: $Enums.ProjectStatus
     detail: string
     createAt?: Date | string
     updateAt?: Date | string
@@ -10263,6 +10266,7 @@ export namespace Prisma {
     id?: number
     name: string
     priority: number
+    projectStatus?: $Enums.ProjectStatus
     detail: string
     createAt?: Date | string
     updateAt?: Date | string
@@ -10357,7 +10361,6 @@ export namespace Prisma {
     NOT?: StatusScalarWhereInput | StatusScalarWhereInput[]
     id?: IntFilter<"Status"> | number
     taskStatus?: EnumTaskStatusFilter<"Status"> | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFilter<"Status"> | $Enums.ProjectStatus
     createAt?: DateTimeFilter<"Status"> | Date | string
     updateAt?: DateTimeFilter<"Status"> | Date | string
     feedback?: StringNullableFilter<"Status"> | string | null
@@ -10379,6 +10382,7 @@ export namespace Prisma {
   export type ProjectListUpdateWithoutTaskInput = {
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10391,6 +10395,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     detail?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10755,7 +10760,6 @@ export namespace Prisma {
   export type StatusCreateManyTaskInput = {
     id?: number
     taskStatus?: $Enums.TaskStatus
-    projectStatus?: $Enums.ProjectStatus
     createAt?: Date | string
     updateAt?: Date | string
     feedback?: string | null
@@ -10782,7 +10786,6 @@ export namespace Prisma {
 
   export type StatusUpdateWithoutTaskInput = {
     taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10792,7 +10795,6 @@ export namespace Prisma {
   export type StatusUncheckedUpdateWithoutTaskInput = {
     id?: IntFieldUpdateOperationsInput | number
     taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10802,7 +10804,6 @@ export namespace Prisma {
   export type StatusUncheckedUpdateManyWithoutTaskInput = {
     id?: IntFieldUpdateOperationsInput | number
     taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    projectStatus?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: NullableStringFieldUpdateOperationsInput | string | null

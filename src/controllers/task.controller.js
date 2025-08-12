@@ -1,32 +1,61 @@
 import prisma from "../config/prisma.config.js";
 import createError from "../utils/create.error.util.js";
 
-export const getAllTask = async(req, res, next) => {
+export const getAllTask = async (req, res, next) => {
   const { id } = req.params;
   const result = await prisma.task.findMany({
-    where : {
+    where: {
       projectListId: +id
     },
     include: {
       status: true
     }
   })
-  console.log("result",result)
+  console.log("result", result)
+  res.json({
+    tasks: result
+  })
+}
+export const getAllUserTask = async (req, res, next) => {
+  const { id } = req.params;
+  const userTask = await prisma.userOnTask.findMany({
+    where: {
+      userId: +id
+    },
+    select: {
+      Task: true,
+    }
+  })
+
+  console.log("userTask", userTask);
+  const taskIds = userTask.map(task => task.Task.id);
+  console.log("taskIds", taskIds);
+
+  const result = await prisma.task.findMany({
+    where: {
+      id: {in:taskIds} ,
+    },
+    include: {
+      status: true,
+    }
+  })
+
+  console.log("result", result)
   res.json({
     tasks: result
   })
 }
 
-export const createTask = async(req, res, next) => {
+export const createTask = async (req, res, next) => {
   try {
-    const {detail, name, dueDate, userId, priority} = req.body
-    const {id} = req.params
+    const { detail, name, dueDate, userId, priority } = req.body
+    const { id } = req.params
 
     const project = await prisma.projectList.findUnique({
       where: { id: +id }
     })
 
-    if (!project){
+    if (!project) {
       createError(400, "Not found project");
     }
 
@@ -44,7 +73,6 @@ export const createTask = async(req, res, next) => {
       data: {
         taskId: task.id,
         taskStatus: "ONGOING",
-        projectStatus: "ONGOING"
       }
     })
 
@@ -65,30 +93,31 @@ export const createTask = async(req, res, next) => {
       result: task,
       statue: status
     })
-    
+
   } catch (error) {
     console.log(error)
   }
 }
 
-export const submitTask = async(req, res, next) => {
+export const submitTask = async (req, res, next) => {
   try {
-    const {id} = req.params;
-    const {feedback, taskStatus} = req.body;
+    const { id } = req.params;
+    const { feedback, taskStatus } = req.body;
     const findTask = await prisma.task.findUnique({
-      where: {id: Number(id)}
+      where: { id: Number(id) }
     })
 
-    if(!findTask){
+    if (!findTask) {
       createError(400, "Cannot update status")
     }
 
     const response = await prisma.status.update({
-      where: {id: +id},
-      data: {feedback, taskStatus}
+      where: { id: +id },
+      data: { feedback, taskStatus }
     })
 
-    res.json({message: `Task is already submit`,
+    res.json({
+      message: `Task is already submit`,
       response: response
     })
 
@@ -97,24 +126,52 @@ export const submitTask = async(req, res, next) => {
   }
 }
 
-export const deleteTask = async(req, res, next) => {
+export const updateTask = async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
+    console.log('id', id)
+    console.log('req.body', req.body)
+    const { taskStatus } = req.body;
     const findTask = await prisma.task.findUnique({
-      where: {id: +id}
+      where: { id: +id }
     })
 
-    if(!findTask){
+    if (!findTask) {
+      createError(400, "Cannot update status")
+    }
+
+    const response = await prisma.status.update({
+      where: { id: +id },
+      data: { taskStatus }
+    })
+
+    res.json({
+      message: `Task is had been ${taskStatus}`,
+      response: response
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const deleteTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const findTask = await prisma.task.findUnique({
+      where: { id: +id }
+    })
+
+    if (!findTask) {
       createError(400, "Cannot delete post")
     }
 
     const response = await prisma.task.delete({
-      where : {id: +id}
+      where: { id: +id }
     })
 
     res.json(
-      {message: "Delete task complete"},
-      {response: response}
+      { message: "Delete task complete" },
+      { response: response }
     )
   } catch (error) {
     console.log(error)

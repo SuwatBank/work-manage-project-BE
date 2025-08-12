@@ -139,6 +139,7 @@ exports.Prisma.ProjectListScalarFieldEnum = {
   id: 'id',
   name: 'name',
   priority: 'priority',
+  projectStatus: 'projectStatus',
   detail: 'detail',
   createAt: 'createAt',
   updateAt: 'updateAt',
@@ -170,7 +171,6 @@ exports.Prisma.UserOnTaskScalarFieldEnum = {
 exports.Prisma.StatusScalarFieldEnum = {
   id: 'id',
   taskStatus: 'taskStatus',
-  projectStatus: 'projectStatus',
   createAt: 'createAt',
   updateAt: 'updateAt',
   feedback: 'feedback',
@@ -218,19 +218,19 @@ exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN'
 };
 
+exports.ProjectStatus = exports.$Enums.ProjectStatus = {
+  ONGOING: 'ONGOING',
+  COMPLETED: 'COMPLETED',
+  PENDING: 'PENDING',
+  OVERDUE: 'OVERDUE'
+};
+
 exports.TaskStatus = exports.$Enums.TaskStatus = {
   ONGOING: 'ONGOING',
   ONAPPROVE: 'ONAPPROVE',
   COMPLETED: 'COMPLETED',
   APPROVE: 'APPROVE',
   REJECT: 'REJECT'
-};
-
-exports.ProjectStatus = exports.$Enums.ProjectStatus = {
-  ONGOING: 'ONGOING',
-  COMPLETED: 'COMPLETED',
-  PENDING: 'PENDING',
-  OVERDUE: 'OVERDUE'
 };
 
 exports.Prisma.ModelName = {

@@ -14,5 +14,4 @@ authRouter.get("/getUserId/:id",authenMiddleware, authController.getUserId);
 authRouter.delete("/user/:id", authController.deleteUser);
 authRouter.patch("/user/:id", authController.editUser);
 
-
 export default authRouter

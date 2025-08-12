@@ -61,7 +61,7 @@ export async function login(req, res, next) {
     }
 
     const payload = {
-      id: checkUser.id,
+      userId: checkUser.id,
       role: checkUser.role
     }
 
@@ -88,7 +88,6 @@ export async function getMe(req, res, next) {
 }
 
 export const getALLUsers = async (req, res, next) => {
-  // console.log('getall', getall)
   const result = await prisma.user.findMany({
     orderBy: { createAt: "desc" }
   })

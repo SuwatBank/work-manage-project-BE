@@ -141,3 +141,28 @@ export const removeProject = async (req, res, next) => {
   const rs = await prisma.projectList.delete({ where: { id: Number(id) } })
   res.json({ message: "Delete complete" })
 }
+
+export const updateProject = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { projectStatus } = req.body;
+    const findProject = await prisma.projectList.findUnique({
+      where: { id: +id }
+    })
+  
+    if (!findProject) {
+      createError(400, "Cannot update status")
+    }
+    const response = await prisma.projectList.update({
+      where: {id: +id},
+      data: { projectStatus}
+    })
+
+    res.json({message: `Task is had been ${projectStatus}`,
+      response: response
+    })
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
