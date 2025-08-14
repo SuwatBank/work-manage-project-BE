@@ -126,20 +126,29 @@ export const createProject = async (req, res, next) => {
 }
 
 export const removeProject = async (req, res, next) => {
-  const { id } = req.params;
-  const { role } = req.params;
-  if (role !== "leader") {
-    createError(401, "Unauthorized")
-  }
-  const foundProject = await prisma.projectList.findUnique({
-    where: { id: Number(id) }
-  })
-  if (!foundProject) {
-    createError(400, "Id not found")
+  try {
+    const { id } = req.params;
+    console.log("iddddd",id);
+    const { role } = req.params;
+    if (role !== "leader") {
+      createError(401, "Unauthorized")
+    }
+    const foundProject = await prisma.projectList.findUnique({
+      where: { id: +id }
+    })
+    if (!foundProject) {
+      createError(400, "Id not found")
+    }
+
+    const result = await prisma.projectList.delete({ where: { id: +id } })
+    res.status(201).json({
+      message: "Delete complete",
+      result: result
+    })
+  } catch (error) {
+    console.log(error)
   }
 
-  const rs = await prisma.projectList.delete({ where: { id: Number(id) } })
-  res.json({ message: "Delete complete" })
 }
 
 export const updateProject = async (req, res, next) => {
@@ -149,19 +158,20 @@ export const updateProject = async (req, res, next) => {
     const findProject = await prisma.projectList.findUnique({
       where: { id: +id }
     })
-  
+
     if (!findProject) {
       createError(400, "Cannot update status")
     }
     const response = await prisma.projectList.update({
-      where: {id: +id},
-      data: { projectStatus}
+      where: { id: +id },
+      data: { projectStatus }
     })
 
-    res.json({message: `Task is had been ${projectStatus}`,
+    res.json({
+      message: `Task is had been ${projectStatus}`,
       response: response
     })
-    
+
   } catch (error) {
     console.log(error);
   }

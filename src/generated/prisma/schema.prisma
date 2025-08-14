@@ -61,10 +61,10 @@ model Task {
   name          String
   detail        String
   priority      Int
+  taskStatus    TaskStatus   @default(ONGOING)
   createAt      DateTime     @default(now()) @db.Timestamp(0)
   updateAt      DateTime     @updatedAt @db.Timestamp(0)
   dueDate       DateTime
-  status        Status[]
   ProjectList   ProjectList  @relation(fields: [projectListId], references: [id], onDelete: Cascade)
   projectListId Int
   assignTo      UserOnTask[]
@@ -72,7 +72,7 @@ model Task {
 }
 
 model UserOnTask {
-  Task   Task @relation(fields: [taskId], references: [id])
+  Task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId Int
   User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
@@ -80,22 +80,13 @@ model UserOnTask {
   @@id([taskId, userId])
 }
 
-model Status {
-  id         Int        @id @default(autoincrement())
-  taskStatus TaskStatus @default(ONGOING)
-  createAt   DateTime   @default(now()) @db.Timestamp(0)
-  updateAt   DateTime   @updatedAt @db.Timestamp(0)
-  feedback   String?
-  attachFile String?
-  Task       Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  taskId     Int
-}
-
 enum TaskStatus {
   ONGOING
   ONAPPROVE
   COMPLETED
+  REQUESTPENDING
   APPROVE
+  APPROVEPENDING
   REJECT
 }
 

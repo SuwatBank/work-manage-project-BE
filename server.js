@@ -6,7 +6,7 @@ import projectRouter from "./src/routes/project.route.js";
 import notFoundMiddleware from "./src/middlewares/not.found.middleware.js";
 import errorMiddleware from "./src/middlewares/error.middleware.js";
 import taskRouter from "./src/routes/task.route.js";
-import statusRouter from "./src/routes/status.route.js";
+// import statusRouter from "./src/routes/status.route.js";
 import cookieParser from "cookie-parser";
 import authenMiddleware from "./src/middlewares/authen.middleware.js";
 
@@ -27,7 +27,7 @@ const PORT = 8000
 app.use("/api/auth", authRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/task", taskRouter);
-app.use("/api/status", statusRouter);
+// app.use("/api/status", statusRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

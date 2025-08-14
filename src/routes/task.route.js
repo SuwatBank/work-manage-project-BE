@@ -6,8 +6,10 @@ taskRouter.get("/getTasks/:id", taskController.getAllTask)
 taskRouter.get("/getUserTasks/:id", taskController.getAllUserTask)
 taskRouter.post("/createTask/:id", taskController.createTask)
 taskRouter.patch("/submitTask/:id", taskController.submitTask)
+// taskRouter.patch("/pendingTask/:id", taskController.submitTask)
 taskRouter.patch("/updateTask/:id", taskController.updateTask)
 taskRouter.delete("/deleteTask/:id", taskController.deleteTask)
 taskRouter.get("/submitTaskList/:id", taskController.submitTaskList)
+taskRouter.get("/pendingTaskList/:id", taskController.pendingTaskList)
 
 export default taskRouter

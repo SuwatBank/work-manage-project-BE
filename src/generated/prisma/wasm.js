@@ -157,6 +157,7 @@ exports.Prisma.TaskScalarFieldEnum = {
   name: 'name',
   detail: 'detail',
   priority: 'priority',
+  taskStatus: 'taskStatus',
   createAt: 'createAt',
   updateAt: 'updateAt',
   dueDate: 'dueDate',
@@ -166,16 +167,6 @@ exports.Prisma.TaskScalarFieldEnum = {
 exports.Prisma.UserOnTaskScalarFieldEnum = {
   taskId: 'taskId',
   userId: 'userId'
-};
-
-exports.Prisma.StatusScalarFieldEnum = {
-  id: 'id',
-  taskStatus: 'taskStatus',
-  createAt: 'createAt',
-  updateAt: 'updateAt',
-  feedback: 'feedback',
-  attachFile: 'attachFile',
-  taskId: 'taskId'
 };
 
 exports.Prisma.SortOrder = {
@@ -207,11 +198,6 @@ exports.Prisma.TaskOrderByRelevanceFieldEnum = {
   name: 'name',
   detail: 'detail'
 };
-
-exports.Prisma.StatusOrderByRelevanceFieldEnum = {
-  feedback: 'feedback',
-  attachFile: 'attachFile'
-};
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   LEADER: 'LEADER',
@@ -229,7 +215,9 @@ exports.TaskStatus = exports.$Enums.TaskStatus = {
   ONGOING: 'ONGOING',
   ONAPPROVE: 'ONAPPROVE',
   COMPLETED: 'COMPLETED',
+  REQUESTPENDING: 'REQUESTPENDING',
   APPROVE: 'APPROVE',
+  APPROVEPENDING: 'APPROVEPENDING',
   REJECT: 'REJECT'
 };
 
@@ -238,8 +226,7 @@ exports.Prisma.ModelName = {
   ProjectList: 'ProjectList',
   UserOnProject: 'UserOnProject',
   Task: 'Task',
-  UserOnTask: 'UserOnTask',
-  Status: 'Status'
+  UserOnTask: 'UserOnTask'
 };
 
 /**

@@ -7,11 +7,8 @@ export const getAllTask = async (req, res, next) => {
     where: {
       projectListId: +id
     },
-    include: {
-      status: true
-    }
   })
-  console.log("result", result)
+  // console.log("result", result)
   res.json({
     tasks: result
   })
@@ -27,17 +24,14 @@ export const getAllUserTask = async (req, res, next) => {
     }
   })
 
-  console.log("userTask", userTask);
+  // console.log("userTask", userTask);
   const taskIds = userTask.map(task => task.Task.id);
-  console.log("taskIds", taskIds);
+  // console.log("taskIds", taskIds);
 
   const result = await prisma.task.findMany({
     where: {
       id: {in:taskIds} ,
     },
-    include: {
-      status: true,
-    }
   })
 
   console.log("result", result)
@@ -50,6 +44,8 @@ export const createTask = async (req, res, next) => {
   try {
     const { detail, name, dueDate, userId, priority } = req.body
     const { id } = req.params
+
+    console.log("idddd",id)
 
     const project = await prisma.projectList.findUnique({
       where: { id: +id }
@@ -65,16 +61,17 @@ export const createTask = async (req, res, next) => {
         detail: detail,
         projectListId: project.id,
         dueDate: new Date(dueDate),
-        priority: +priority
-      }
-    })
-
-    const status = await prisma.status.create({
-      data: {
-        taskId: task.id,
+        priority: +priority,
         taskStatus: "ONGOING",
       }
     })
+
+    // const status = await prisma.status.create({
+    //   data: {
+    //     taskId: task.id,
+    //     taskStatus: "ONGOING",
+    //   }
+    // })
 
     if (userId.length > 0) {
       console.log('create useron task');
@@ -91,7 +88,6 @@ export const createTask = async (req, res, next) => {
     res.status(201).json({
       message: "Task created successfully",
       result: task,
-      statue: status
     })
 
   } catch (error) {
@@ -111,7 +107,7 @@ export const submitTask = async (req, res, next) => {
       createError(400, "Cannot update status")
     }
 
-    const response = await prisma.status.update({
+    const response = await prisma.task.update({
       where: { id: +id },
       data: { feedback, taskStatus }
     })
@@ -129,18 +125,17 @@ export const submitTask = async (req, res, next) => {
 export const updateTask = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log('id', id)
-    console.log('req.body', req.body)
     const { taskStatus } = req.body;
+    console.log('taskStatus',taskStatus)
     const findTask = await prisma.task.findUnique({
-      where: { id: +id }
+      where: { id: +id },
     })
 
     if (!findTask) {
       createError(400, "Cannot update status")
     }
 
-    const response = await prisma.status.update({
+    const response = await prisma.task.update({
       where: { id: +id },
       data: { taskStatus }
     })
@@ -156,7 +151,8 @@ export const updateTask = async (req, res, next) => {
 
 export const deleteTask = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    let { id } = req.params;
+    console.log(typeof +id, id)
     const findTask = await prisma.task.findUnique({
       where: { id: +id }
     })
@@ -221,16 +217,33 @@ export const submitTaskList = async (req, res, next) => {
     const result = await prisma.task.findMany({
       where: {
         projectListId: { in: projectListIds },
-        status: {
-          some: {
-            taskStatus: 'ONAPPROVE'
-          }
-        }
+        taskStatus: 'ONAPPROVE'
       },
-      include: {
-        status: true,
-        // ProjectList: true, // optional: if you want project data too
-      }
+    });
+
+    res.json({ result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+export const pendingTaskList = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Get all projectListIds the user is assigned to
+    const projectList = await prisma.userOnProject.findMany({
+      where: { userId: +id },
+      select: { projectListId: true }
+    });
+
+    const projectListIds = projectList.map(p => p.projectListId);
+
+    const result = await prisma.task.findMany({
+      where: {
+        projectListId: { in: projectListIds },
+        taskStatus: 'REQUESTPENDING'
+      },
     });
 
     res.json({ result });

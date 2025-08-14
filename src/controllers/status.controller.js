@@ -40,11 +40,13 @@ export const updateTaskStatus = async(req, res, next) => {
     if(!findtask) {
       createError(400, "Not found task")
     }
-    const response = await prisma.task.update({
-      where: {id : +id},
-      data: {taskStatus}
+    const response = await prisma.status.update({
+      where: {taskId : +id},
+      data: {taskStatus: taskStatus}
     })
-    res.json({message: "Task update complete"})
+    res.json({message: "Task update complete",
+      result: response
+    })
   } catch (error) {
     console.log(error)
   }

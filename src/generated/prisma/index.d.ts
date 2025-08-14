@@ -38,11 +38,6 @@ export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
  * 
  */
 export type UserOnTask = $Result.DefaultSelection<Prisma.$UserOnTaskPayload>
-/**
- * Model Status
- * 
- */
-export type Status = $Result.DefaultSelection<Prisma.$StatusPayload>
 
 /**
  * Enums
@@ -61,7 +56,9 @@ export const TaskStatus: {
   ONGOING: 'ONGOING',
   ONAPPROVE: 'ONAPPROVE',
   COMPLETED: 'COMPLETED',
+  REQUESTPENDING: 'REQUESTPENDING',
   APPROVE: 'APPROVE',
+  APPROVEPENDING: 'APPROVEPENDING',
   REJECT: 'REJECT'
 };
 
@@ -265,16 +262,6 @@ export class PrismaClient<
     * ```
     */
   get userOnTask(): Prisma.UserOnTaskDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.status`: Exposes CRUD operations for the **Status** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Statuses
-    * const statuses = await prisma.status.findMany()
-    * ```
-    */
-  get status(): Prisma.StatusDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -719,8 +706,7 @@ export namespace Prisma {
     ProjectList: 'ProjectList',
     UserOnProject: 'UserOnProject',
     Task: 'Task',
-    UserOnTask: 'UserOnTask',
-    Status: 'Status'
+    UserOnTask: 'UserOnTask'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -739,7 +725,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "projectList" | "userOnProject" | "task" | "userOnTask" | "status"
+      modelProps: "user" | "projectList" | "userOnProject" | "task" | "userOnTask"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1073,72 +1059,6 @@ export namespace Prisma {
           }
         }
       }
-      Status: {
-        payload: Prisma.$StatusPayload<ExtArgs>
-        fields: Prisma.StatusFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.StatusFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.StatusFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload>
-          }
-          findFirst: {
-            args: Prisma.StatusFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.StatusFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload>
-          }
-          findMany: {
-            args: Prisma.StatusFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload>[]
-          }
-          create: {
-            args: Prisma.StatusCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload>
-          }
-          createMany: {
-            args: Prisma.StatusCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.StatusDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload>
-          }
-          update: {
-            args: Prisma.StatusUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload>
-          }
-          deleteMany: {
-            args: Prisma.StatusDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.StatusUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.StatusUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StatusPayload>
-          }
-          aggregate: {
-            args: Prisma.StatusAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateStatus>
-          }
-          groupBy: {
-            args: Prisma.StatusGroupByArgs<ExtArgs>
-            result: $Utils.Optional<StatusGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.StatusCountArgs<ExtArgs>
-            result: $Utils.Optional<StatusCountAggregateOutputType> | number
-          }
-        }
-      }
     }
   } & {
     other: {
@@ -1228,7 +1148,6 @@ export namespace Prisma {
     userOnProject?: UserOnProjectOmit
     task?: TaskOmit
     userOnTask?: UserOnTaskOmit
-    status?: StatusOmit
   }
 
   /* Types for Logging */
@@ -1403,13 +1322,11 @@ export namespace Prisma {
    */
 
   export type TaskCountOutputType = {
-    status: number
     assignTo: number
     User: number
   }
 
   export type TaskCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    status?: boolean | TaskCountOutputTypeCountStatusArgs
     assignTo?: boolean | TaskCountOutputTypeCountAssignToArgs
     User?: boolean | TaskCountOutputTypeCountUserArgs
   }
@@ -1423,13 +1340,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the TaskCountOutputType
      */
     select?: TaskCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * TaskCountOutputType without action
-   */
-  export type TaskCountOutputTypeCountStatusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: StatusWhereInput
   }
 
   /**
@@ -4608,6 +4518,7 @@ export namespace Prisma {
     name: string | null
     detail: string | null
     priority: number | null
+    taskStatus: $Enums.TaskStatus | null
     createAt: Date | null
     updateAt: Date | null
     dueDate: Date | null
@@ -4619,6 +4530,7 @@ export namespace Prisma {
     name: string | null
     detail: string | null
     priority: number | null
+    taskStatus: $Enums.TaskStatus | null
     createAt: Date | null
     updateAt: Date | null
     dueDate: Date | null
@@ -4630,6 +4542,7 @@ export namespace Prisma {
     name: number
     detail: number
     priority: number
+    taskStatus: number
     createAt: number
     updateAt: number
     dueDate: number
@@ -4655,6 +4568,7 @@ export namespace Prisma {
     name?: true
     detail?: true
     priority?: true
+    taskStatus?: true
     createAt?: true
     updateAt?: true
     dueDate?: true
@@ -4666,6 +4580,7 @@ export namespace Prisma {
     name?: true
     detail?: true
     priority?: true
+    taskStatus?: true
     createAt?: true
     updateAt?: true
     dueDate?: true
@@ -4677,6 +4592,7 @@ export namespace Prisma {
     name?: true
     detail?: true
     priority?: true
+    taskStatus?: true
     createAt?: true
     updateAt?: true
     dueDate?: true
@@ -4775,6 +4691,7 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus: $Enums.TaskStatus
     createAt: Date
     updateAt: Date
     dueDate: Date
@@ -4805,11 +4722,11 @@ export namespace Prisma {
     name?: boolean
     detail?: boolean
     priority?: boolean
+    taskStatus?: boolean
     createAt?: boolean
     updateAt?: boolean
     dueDate?: boolean
     projectListId?: boolean
-    status?: boolean | Task$statusArgs<ExtArgs>
     ProjectList?: boolean | ProjectListDefaultArgs<ExtArgs>
     assignTo?: boolean | Task$assignToArgs<ExtArgs>
     User?: boolean | Task$UserArgs<ExtArgs>
@@ -4823,15 +4740,15 @@ export namespace Prisma {
     name?: boolean
     detail?: boolean
     priority?: boolean
+    taskStatus?: boolean
     createAt?: boolean
     updateAt?: boolean
     dueDate?: boolean
     projectListId?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "detail" | "priority" | "createAt" | "updateAt" | "dueDate" | "projectListId", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "detail" | "priority" | "taskStatus" | "createAt" | "updateAt" | "dueDate" | "projectListId", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    status?: boolean | Task$statusArgs<ExtArgs>
     ProjectList?: boolean | ProjectListDefaultArgs<ExtArgs>
     assignTo?: boolean | Task$assignToArgs<ExtArgs>
     User?: boolean | Task$UserArgs<ExtArgs>
@@ -4841,7 +4758,6 @@ export namespace Prisma {
   export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Task"
     objects: {
-      status: Prisma.$StatusPayload<ExtArgs>[]
       ProjectList: Prisma.$ProjectListPayload<ExtArgs>
       assignTo: Prisma.$UserOnTaskPayload<ExtArgs>[]
       User: Prisma.$UserPayload<ExtArgs>[]
@@ -4851,6 +4767,7 @@ export namespace Prisma {
       name: string
       detail: string
       priority: number
+      taskStatus: $Enums.TaskStatus
       createAt: Date
       updateAt: Date
       dueDate: Date
@@ -5195,7 +5112,6 @@ export namespace Prisma {
    */
   export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    status<T extends Task$statusArgs<ExtArgs> = {}>(args?: Subset<T, Task$statusArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ProjectList<T extends ProjectListDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectListDefaultArgs<ExtArgs>>): Prisma__ProjectListClient<$Result.GetResult<Prisma.$ProjectListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assignTo<T extends Task$assignToArgs<ExtArgs> = {}>(args?: Subset<T, Task$assignToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserOnTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     User<T extends Task$UserArgs<ExtArgs> = {}>(args?: Subset<T, Task$UserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5232,6 +5148,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Task", 'String'>
     readonly detail: FieldRef<"Task", 'String'>
     readonly priority: FieldRef<"Task", 'Int'>
+    readonly taskStatus: FieldRef<"Task", 'TaskStatus'>
     readonly createAt: FieldRef<"Task", 'DateTime'>
     readonly updateAt: FieldRef<"Task", 'DateTime'>
     readonly dueDate: FieldRef<"Task", 'DateTime'>
@@ -5576,30 +5493,6 @@ export namespace Prisma {
      * Limit how many Tasks to delete.
      */
     limit?: number
-  }
-
-  /**
-   * Task.status
-   */
-  export type Task$statusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    where?: StatusWhereInput
-    orderBy?: StatusOrderByWithRelationInput | StatusOrderByWithRelationInput[]
-    cursor?: StatusWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: StatusScalarFieldEnum | StatusScalarFieldEnum[]
   }
 
   /**
@@ -6608,995 +6501,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Status
-   */
-
-  export type AggregateStatus = {
-    _count: StatusCountAggregateOutputType | null
-    _avg: StatusAvgAggregateOutputType | null
-    _sum: StatusSumAggregateOutputType | null
-    _min: StatusMinAggregateOutputType | null
-    _max: StatusMaxAggregateOutputType | null
-  }
-
-  export type StatusAvgAggregateOutputType = {
-    id: number | null
-    taskId: number | null
-  }
-
-  export type StatusSumAggregateOutputType = {
-    id: number | null
-    taskId: number | null
-  }
-
-  export type StatusMinAggregateOutputType = {
-    id: number | null
-    taskStatus: $Enums.TaskStatus | null
-    createAt: Date | null
-    updateAt: Date | null
-    feedback: string | null
-    attachFile: string | null
-    taskId: number | null
-  }
-
-  export type StatusMaxAggregateOutputType = {
-    id: number | null
-    taskStatus: $Enums.TaskStatus | null
-    createAt: Date | null
-    updateAt: Date | null
-    feedback: string | null
-    attachFile: string | null
-    taskId: number | null
-  }
-
-  export type StatusCountAggregateOutputType = {
-    id: number
-    taskStatus: number
-    createAt: number
-    updateAt: number
-    feedback: number
-    attachFile: number
-    taskId: number
-    _all: number
-  }
-
-
-  export type StatusAvgAggregateInputType = {
-    id?: true
-    taskId?: true
-  }
-
-  export type StatusSumAggregateInputType = {
-    id?: true
-    taskId?: true
-  }
-
-  export type StatusMinAggregateInputType = {
-    id?: true
-    taskStatus?: true
-    createAt?: true
-    updateAt?: true
-    feedback?: true
-    attachFile?: true
-    taskId?: true
-  }
-
-  export type StatusMaxAggregateInputType = {
-    id?: true
-    taskStatus?: true
-    createAt?: true
-    updateAt?: true
-    feedback?: true
-    attachFile?: true
-    taskId?: true
-  }
-
-  export type StatusCountAggregateInputType = {
-    id?: true
-    taskStatus?: true
-    createAt?: true
-    updateAt?: true
-    feedback?: true
-    attachFile?: true
-    taskId?: true
-    _all?: true
-  }
-
-  export type StatusAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Status to aggregate.
-     */
-    where?: StatusWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Statuses to fetch.
-     */
-    orderBy?: StatusOrderByWithRelationInput | StatusOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: StatusWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Statuses from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Statuses.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Statuses
-    **/
-    _count?: true | StatusCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: StatusAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: StatusSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: StatusMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: StatusMaxAggregateInputType
-  }
-
-  export type GetStatusAggregateType<T extends StatusAggregateArgs> = {
-        [P in keyof T & keyof AggregateStatus]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateStatus[P]>
-      : GetScalarType<T[P], AggregateStatus[P]>
-  }
-
-
-
-
-  export type StatusGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: StatusWhereInput
-    orderBy?: StatusOrderByWithAggregationInput | StatusOrderByWithAggregationInput[]
-    by: StatusScalarFieldEnum[] | StatusScalarFieldEnum
-    having?: StatusScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: StatusCountAggregateInputType | true
-    _avg?: StatusAvgAggregateInputType
-    _sum?: StatusSumAggregateInputType
-    _min?: StatusMinAggregateInputType
-    _max?: StatusMaxAggregateInputType
-  }
-
-  export type StatusGroupByOutputType = {
-    id: number
-    taskStatus: $Enums.TaskStatus
-    createAt: Date
-    updateAt: Date
-    feedback: string | null
-    attachFile: string | null
-    taskId: number
-    _count: StatusCountAggregateOutputType | null
-    _avg: StatusAvgAggregateOutputType | null
-    _sum: StatusSumAggregateOutputType | null
-    _min: StatusMinAggregateOutputType | null
-    _max: StatusMaxAggregateOutputType | null
-  }
-
-  type GetStatusGroupByPayload<T extends StatusGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<StatusGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof StatusGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], StatusGroupByOutputType[P]>
-            : GetScalarType<T[P], StatusGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type StatusSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    taskStatus?: boolean
-    createAt?: boolean
-    updateAt?: boolean
-    feedback?: boolean
-    attachFile?: boolean
-    taskId?: boolean
-    Task?: boolean | TaskDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["status"]>
-
-
-
-  export type StatusSelectScalar = {
-    id?: boolean
-    taskStatus?: boolean
-    createAt?: boolean
-    updateAt?: boolean
-    feedback?: boolean
-    attachFile?: boolean
-    taskId?: boolean
-  }
-
-  export type StatusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskStatus" | "createAt" | "updateAt" | "feedback" | "attachFile" | "taskId", ExtArgs["result"]["status"]>
-  export type StatusInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Task?: boolean | TaskDefaultArgs<ExtArgs>
-  }
-
-  export type $StatusPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Status"
-    objects: {
-      Task: Prisma.$TaskPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      taskStatus: $Enums.TaskStatus
-      createAt: Date
-      updateAt: Date
-      feedback: string | null
-      attachFile: string | null
-      taskId: number
-    }, ExtArgs["result"]["status"]>
-    composites: {}
-  }
-
-  type StatusGetPayload<S extends boolean | null | undefined | StatusDefaultArgs> = $Result.GetResult<Prisma.$StatusPayload, S>
-
-  type StatusCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<StatusFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: StatusCountAggregateInputType | true
-    }
-
-  export interface StatusDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Status'], meta: { name: 'Status' } }
-    /**
-     * Find zero or one Status that matches the filter.
-     * @param {StatusFindUniqueArgs} args - Arguments to find a Status
-     * @example
-     * // Get one Status
-     * const status = await prisma.status.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends StatusFindUniqueArgs>(args: SelectSubset<T, StatusFindUniqueArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Status that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {StatusFindUniqueOrThrowArgs} args - Arguments to find a Status
-     * @example
-     * // Get one Status
-     * const status = await prisma.status.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends StatusFindUniqueOrThrowArgs>(args: SelectSubset<T, StatusFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Status that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {StatusFindFirstArgs} args - Arguments to find a Status
-     * @example
-     * // Get one Status
-     * const status = await prisma.status.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends StatusFindFirstArgs>(args?: SelectSubset<T, StatusFindFirstArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Status that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {StatusFindFirstOrThrowArgs} args - Arguments to find a Status
-     * @example
-     * // Get one Status
-     * const status = await prisma.status.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends StatusFindFirstOrThrowArgs>(args?: SelectSubset<T, StatusFindFirstOrThrowArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Statuses that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {StatusFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Statuses
-     * const statuses = await prisma.status.findMany()
-     * 
-     * // Get first 10 Statuses
-     * const statuses = await prisma.status.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const statusWithIdOnly = await prisma.status.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends StatusFindManyArgs>(args?: SelectSubset<T, StatusFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Status.
-     * @param {StatusCreateArgs} args - Arguments to create a Status.
-     * @example
-     * // Create one Status
-     * const Status = await prisma.status.create({
-     *   data: {
-     *     // ... data to create a Status
-     *   }
-     * })
-     * 
-     */
-    create<T extends StatusCreateArgs>(args: SelectSubset<T, StatusCreateArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Statuses.
-     * @param {StatusCreateManyArgs} args - Arguments to create many Statuses.
-     * @example
-     * // Create many Statuses
-     * const status = await prisma.status.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends StatusCreateManyArgs>(args?: SelectSubset<T, StatusCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Status.
-     * @param {StatusDeleteArgs} args - Arguments to delete one Status.
-     * @example
-     * // Delete one Status
-     * const Status = await prisma.status.delete({
-     *   where: {
-     *     // ... filter to delete one Status
-     *   }
-     * })
-     * 
-     */
-    delete<T extends StatusDeleteArgs>(args: SelectSubset<T, StatusDeleteArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Status.
-     * @param {StatusUpdateArgs} args - Arguments to update one Status.
-     * @example
-     * // Update one Status
-     * const status = await prisma.status.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends StatusUpdateArgs>(args: SelectSubset<T, StatusUpdateArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Statuses.
-     * @param {StatusDeleteManyArgs} args - Arguments to filter Statuses to delete.
-     * @example
-     * // Delete a few Statuses
-     * const { count } = await prisma.status.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends StatusDeleteManyArgs>(args?: SelectSubset<T, StatusDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Statuses.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {StatusUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Statuses
-     * const status = await prisma.status.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends StatusUpdateManyArgs>(args: SelectSubset<T, StatusUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Status.
-     * @param {StatusUpsertArgs} args - Arguments to update or create a Status.
-     * @example
-     * // Update or create a Status
-     * const status = await prisma.status.upsert({
-     *   create: {
-     *     // ... data to create a Status
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Status we want to update
-     *   }
-     * })
-     */
-    upsert<T extends StatusUpsertArgs>(args: SelectSubset<T, StatusUpsertArgs<ExtArgs>>): Prisma__StatusClient<$Result.GetResult<Prisma.$StatusPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Statuses.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {StatusCountArgs} args - Arguments to filter Statuses to count.
-     * @example
-     * // Count the number of Statuses
-     * const count = await prisma.status.count({
-     *   where: {
-     *     // ... the filter for the Statuses we want to count
-     *   }
-     * })
-    **/
-    count<T extends StatusCountArgs>(
-      args?: Subset<T, StatusCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], StatusCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Status.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {StatusAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends StatusAggregateArgs>(args: Subset<T, StatusAggregateArgs>): Prisma.PrismaPromise<GetStatusAggregateType<T>>
-
-    /**
-     * Group by Status.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {StatusGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends StatusGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: StatusGroupByArgs['orderBy'] }
-        : { orderBy?: StatusGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, StatusGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStatusGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Status model
-   */
-  readonly fields: StatusFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Status.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__StatusClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    Task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Status model
-   */
-  interface StatusFieldRefs {
-    readonly id: FieldRef<"Status", 'Int'>
-    readonly taskStatus: FieldRef<"Status", 'TaskStatus'>
-    readonly createAt: FieldRef<"Status", 'DateTime'>
-    readonly updateAt: FieldRef<"Status", 'DateTime'>
-    readonly feedback: FieldRef<"Status", 'String'>
-    readonly attachFile: FieldRef<"Status", 'String'>
-    readonly taskId: FieldRef<"Status", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Status findUnique
-   */
-  export type StatusFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * Filter, which Status to fetch.
-     */
-    where: StatusWhereUniqueInput
-  }
-
-  /**
-   * Status findUniqueOrThrow
-   */
-  export type StatusFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * Filter, which Status to fetch.
-     */
-    where: StatusWhereUniqueInput
-  }
-
-  /**
-   * Status findFirst
-   */
-  export type StatusFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * Filter, which Status to fetch.
-     */
-    where?: StatusWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Statuses to fetch.
-     */
-    orderBy?: StatusOrderByWithRelationInput | StatusOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Statuses.
-     */
-    cursor?: StatusWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Statuses from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Statuses.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Statuses.
-     */
-    distinct?: StatusScalarFieldEnum | StatusScalarFieldEnum[]
-  }
-
-  /**
-   * Status findFirstOrThrow
-   */
-  export type StatusFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * Filter, which Status to fetch.
-     */
-    where?: StatusWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Statuses to fetch.
-     */
-    orderBy?: StatusOrderByWithRelationInput | StatusOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Statuses.
-     */
-    cursor?: StatusWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Statuses from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Statuses.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Statuses.
-     */
-    distinct?: StatusScalarFieldEnum | StatusScalarFieldEnum[]
-  }
-
-  /**
-   * Status findMany
-   */
-  export type StatusFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * Filter, which Statuses to fetch.
-     */
-    where?: StatusWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Statuses to fetch.
-     */
-    orderBy?: StatusOrderByWithRelationInput | StatusOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Statuses.
-     */
-    cursor?: StatusWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Statuses from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Statuses.
-     */
-    skip?: number
-    distinct?: StatusScalarFieldEnum | StatusScalarFieldEnum[]
-  }
-
-  /**
-   * Status create
-   */
-  export type StatusCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Status.
-     */
-    data: XOR<StatusCreateInput, StatusUncheckedCreateInput>
-  }
-
-  /**
-   * Status createMany
-   */
-  export type StatusCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Statuses.
-     */
-    data: StatusCreateManyInput | StatusCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Status update
-   */
-  export type StatusUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Status.
-     */
-    data: XOR<StatusUpdateInput, StatusUncheckedUpdateInput>
-    /**
-     * Choose, which Status to update.
-     */
-    where: StatusWhereUniqueInput
-  }
-
-  /**
-   * Status updateMany
-   */
-  export type StatusUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Statuses.
-     */
-    data: XOR<StatusUpdateManyMutationInput, StatusUncheckedUpdateManyInput>
-    /**
-     * Filter which Statuses to update
-     */
-    where?: StatusWhereInput
-    /**
-     * Limit how many Statuses to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Status upsert
-   */
-  export type StatusUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Status to update in case it exists.
-     */
-    where: StatusWhereUniqueInput
-    /**
-     * In case the Status found by the `where` argument doesn't exist, create a new Status with this data.
-     */
-    create: XOR<StatusCreateInput, StatusUncheckedCreateInput>
-    /**
-     * In case the Status was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<StatusUpdateInput, StatusUncheckedUpdateInput>
-  }
-
-  /**
-   * Status delete
-   */
-  export type StatusDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-    /**
-     * Filter which Status to delete.
-     */
-    where: StatusWhereUniqueInput
-  }
-
-  /**
-   * Status deleteMany
-   */
-  export type StatusDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Statuses to delete
-     */
-    where?: StatusWhereInput
-    /**
-     * Limit how many Statuses to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Status without action
-   */
-  export type StatusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Status
-     */
-    select?: StatusSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Status
-     */
-    omit?: StatusOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StatusInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Enums
    */
 
@@ -7656,6 +6560,7 @@ export namespace Prisma {
     name: 'name',
     detail: 'detail',
     priority: 'priority',
+    taskStatus: 'taskStatus',
     createAt: 'createAt',
     updateAt: 'updateAt',
     dueDate: 'dueDate',
@@ -7671,19 +6576,6 @@ export namespace Prisma {
   };
 
   export type UserOnTaskScalarFieldEnum = (typeof UserOnTaskScalarFieldEnum)[keyof typeof UserOnTaskScalarFieldEnum]
-
-
-  export const StatusScalarFieldEnum: {
-    id: 'id',
-    taskStatus: 'taskStatus',
-    createAt: 'createAt',
-    updateAt: 'updateAt',
-    feedback: 'feedback',
-    attachFile: 'attachFile',
-    taskId: 'taskId'
-  };
-
-  export type StatusScalarFieldEnum = (typeof StatusScalarFieldEnum)[keyof typeof StatusScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -7729,14 +6621,6 @@ export namespace Prisma {
   };
 
   export type TaskOrderByRelevanceFieldEnum = (typeof TaskOrderByRelevanceFieldEnum)[keyof typeof TaskOrderByRelevanceFieldEnum]
-
-
-  export const StatusOrderByRelevanceFieldEnum: {
-    feedback: 'feedback',
-    attachFile: 'attachFile'
-  };
-
-  export type StatusOrderByRelevanceFieldEnum = (typeof StatusOrderByRelevanceFieldEnum)[keyof typeof StatusOrderByRelevanceFieldEnum]
 
 
   /**
@@ -8030,11 +6914,11 @@ export namespace Prisma {
     name?: StringFilter<"Task"> | string
     detail?: StringFilter<"Task"> | string
     priority?: IntFilter<"Task"> | number
+    taskStatus?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     createAt?: DateTimeFilter<"Task"> | Date | string
     updateAt?: DateTimeFilter<"Task"> | Date | string
     dueDate?: DateTimeFilter<"Task"> | Date | string
     projectListId?: IntFilter<"Task"> | number
-    status?: StatusListRelationFilter
     ProjectList?: XOR<ProjectListScalarRelationFilter, ProjectListWhereInput>
     assignTo?: UserOnTaskListRelationFilter
     User?: UserListRelationFilter
@@ -8045,11 +6929,11 @@ export namespace Prisma {
     name?: SortOrder
     detail?: SortOrder
     priority?: SortOrder
+    taskStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     dueDate?: SortOrder
     projectListId?: SortOrder
-    status?: StatusOrderByRelationAggregateInput
     ProjectList?: ProjectListOrderByWithRelationInput
     assignTo?: UserOnTaskOrderByRelationAggregateInput
     User?: UserOrderByRelationAggregateInput
@@ -8064,11 +6948,11 @@ export namespace Prisma {
     name?: StringFilter<"Task"> | string
     detail?: StringFilter<"Task"> | string
     priority?: IntFilter<"Task"> | number
+    taskStatus?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     createAt?: DateTimeFilter<"Task"> | Date | string
     updateAt?: DateTimeFilter<"Task"> | Date | string
     dueDate?: DateTimeFilter<"Task"> | Date | string
     projectListId?: IntFilter<"Task"> | number
-    status?: StatusListRelationFilter
     ProjectList?: XOR<ProjectListScalarRelationFilter, ProjectListWhereInput>
     assignTo?: UserOnTaskListRelationFilter
     User?: UserListRelationFilter
@@ -8079,6 +6963,7 @@ export namespace Prisma {
     name?: SortOrder
     detail?: SortOrder
     priority?: SortOrder
+    taskStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     dueDate?: SortOrder
@@ -8098,6 +6983,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Task"> | string
     detail?: StringWithAggregatesFilter<"Task"> | string
     priority?: IntWithAggregatesFilter<"Task"> | number
+    taskStatus?: EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
     createAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updateAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     dueDate?: DateTimeWithAggregatesFilter<"Task"> | Date | string
@@ -8148,74 +7034,6 @@ export namespace Prisma {
     NOT?: UserOnTaskScalarWhereWithAggregatesInput | UserOnTaskScalarWhereWithAggregatesInput[]
     taskId?: IntWithAggregatesFilter<"UserOnTask"> | number
     userId?: IntWithAggregatesFilter<"UserOnTask"> | number
-  }
-
-  export type StatusWhereInput = {
-    AND?: StatusWhereInput | StatusWhereInput[]
-    OR?: StatusWhereInput[]
-    NOT?: StatusWhereInput | StatusWhereInput[]
-    id?: IntFilter<"Status"> | number
-    taskStatus?: EnumTaskStatusFilter<"Status"> | $Enums.TaskStatus
-    createAt?: DateTimeFilter<"Status"> | Date | string
-    updateAt?: DateTimeFilter<"Status"> | Date | string
-    feedback?: StringNullableFilter<"Status"> | string | null
-    attachFile?: StringNullableFilter<"Status"> | string | null
-    taskId?: IntFilter<"Status"> | number
-    Task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
-  }
-
-  export type StatusOrderByWithRelationInput = {
-    id?: SortOrder
-    taskStatus?: SortOrder
-    createAt?: SortOrder
-    updateAt?: SortOrder
-    feedback?: SortOrderInput | SortOrder
-    attachFile?: SortOrderInput | SortOrder
-    taskId?: SortOrder
-    Task?: TaskOrderByWithRelationInput
-    _relevance?: StatusOrderByRelevanceInput
-  }
-
-  export type StatusWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: StatusWhereInput | StatusWhereInput[]
-    OR?: StatusWhereInput[]
-    NOT?: StatusWhereInput | StatusWhereInput[]
-    taskStatus?: EnumTaskStatusFilter<"Status"> | $Enums.TaskStatus
-    createAt?: DateTimeFilter<"Status"> | Date | string
-    updateAt?: DateTimeFilter<"Status"> | Date | string
-    feedback?: StringNullableFilter<"Status"> | string | null
-    attachFile?: StringNullableFilter<"Status"> | string | null
-    taskId?: IntFilter<"Status"> | number
-    Task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
-  }, "id">
-
-  export type StatusOrderByWithAggregationInput = {
-    id?: SortOrder
-    taskStatus?: SortOrder
-    createAt?: SortOrder
-    updateAt?: SortOrder
-    feedback?: SortOrderInput | SortOrder
-    attachFile?: SortOrderInput | SortOrder
-    taskId?: SortOrder
-    _count?: StatusCountOrderByAggregateInput
-    _avg?: StatusAvgOrderByAggregateInput
-    _max?: StatusMaxOrderByAggregateInput
-    _min?: StatusMinOrderByAggregateInput
-    _sum?: StatusSumOrderByAggregateInput
-  }
-
-  export type StatusScalarWhereWithAggregatesInput = {
-    AND?: StatusScalarWhereWithAggregatesInput | StatusScalarWhereWithAggregatesInput[]
-    OR?: StatusScalarWhereWithAggregatesInput[]
-    NOT?: StatusScalarWhereWithAggregatesInput | StatusScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Status"> | number
-    taskStatus?: EnumTaskStatusWithAggregatesFilter<"Status"> | $Enums.TaskStatus
-    createAt?: DateTimeWithAggregatesFilter<"Status"> | Date | string
-    updateAt?: DateTimeWithAggregatesFilter<"Status"> | Date | string
-    feedback?: StringNullableWithAggregatesFilter<"Status"> | string | null
-    attachFile?: StringNullableWithAggregatesFilter<"Status"> | string | null
-    taskId?: IntWithAggregatesFilter<"Status"> | number
   }
 
   export type UserCreateInput = {
@@ -8454,10 +7272,10 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
-    status?: StatusCreateNestedManyWithoutTaskInput
     ProjectList: ProjectListCreateNestedOneWithoutTaskInput
     assignTo?: UserOnTaskCreateNestedManyWithoutTaskInput
     User?: UserCreateNestedManyWithoutTaskInput
@@ -8468,11 +7286,11 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
     projectListId: number
-    status?: StatusUncheckedCreateNestedManyWithoutTaskInput
     assignTo?: UserOnTaskUncheckedCreateNestedManyWithoutTaskInput
     User?: UserUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -8481,10 +7299,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StatusUpdateManyWithoutTaskNestedInput
     ProjectList?: ProjectListUpdateOneRequiredWithoutTaskNestedInput
     assignTo?: UserOnTaskUpdateManyWithoutTaskNestedInput
     User?: UserUpdateManyWithoutTaskNestedInput
@@ -8495,11 +7313,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     projectListId?: IntFieldUpdateOperationsInput | number
-    status?: StatusUncheckedUpdateManyWithoutTaskNestedInput
     assignTo?: UserOnTaskUncheckedUpdateManyWithoutTaskNestedInput
     User?: UserUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -8509,6 +7327,7 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
@@ -8519,6 +7338,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8529,6 +7349,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8567,72 +7388,6 @@ export namespace Prisma {
   export type UserOnTaskUncheckedUpdateManyInput = {
     taskId?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type StatusCreateInput = {
-    taskStatus?: $Enums.TaskStatus
-    createAt?: Date | string
-    updateAt?: Date | string
-    feedback?: string | null
-    attachFile?: string | null
-    Task: TaskCreateNestedOneWithoutStatusInput
-  }
-
-  export type StatusUncheckedCreateInput = {
-    id?: number
-    taskStatus?: $Enums.TaskStatus
-    createAt?: Date | string
-    updateAt?: Date | string
-    feedback?: string | null
-    attachFile?: string | null
-    taskId: number
-  }
-
-  export type StatusUpdateInput = {
-    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedback?: NullableStringFieldUpdateOperationsInput | string | null
-    attachFile?: NullableStringFieldUpdateOperationsInput | string | null
-    Task?: TaskUpdateOneRequiredWithoutStatusNestedInput
-  }
-
-  export type StatusUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedback?: NullableStringFieldUpdateOperationsInput | string | null
-    attachFile?: NullableStringFieldUpdateOperationsInput | string | null
-    taskId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type StatusCreateManyInput = {
-    id?: number
-    taskStatus?: $Enums.TaskStatus
-    createAt?: Date | string
-    updateAt?: Date | string
-    feedback?: string | null
-    attachFile?: string | null
-    taskId: number
-  }
-
-  export type StatusUpdateManyMutationInput = {
-    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedback?: NullableStringFieldUpdateOperationsInput | string | null
-    attachFile?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type StatusUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedback?: NullableStringFieldUpdateOperationsInput | string | null
-    attachFile?: NullableStringFieldUpdateOperationsInput | string | null
-    taskId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -8976,20 +7731,17 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
-  export type StatusListRelationFilter = {
-    every?: StatusWhereInput
-    some?: StatusWhereInput
-    none?: StatusWhereInput
+  export type EnumTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[]
+    notIn?: $Enums.TaskStatus[]
+    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
   }
 
   export type UserListRelationFilter = {
     every?: UserWhereInput
     some?: UserWhereInput
     none?: UserWhereInput
-  }
-
-  export type StatusOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type UserOrderByRelationAggregateInput = {
@@ -9007,6 +7759,7 @@ export namespace Prisma {
     name?: SortOrder
     detail?: SortOrder
     priority?: SortOrder
+    taskStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     dueDate?: SortOrder
@@ -9024,6 +7777,7 @@ export namespace Prisma {
     name?: SortOrder
     detail?: SortOrder
     priority?: SortOrder
+    taskStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     dueDate?: SortOrder
@@ -9035,6 +7789,7 @@ export namespace Prisma {
     name?: SortOrder
     detail?: SortOrder
     priority?: SortOrder
+    taskStatus?: SortOrder
     createAt?: SortOrder
     updateAt?: SortOrder
     dueDate?: SortOrder
@@ -9045,6 +7800,16 @@ export namespace Prisma {
     id?: SortOrder
     priority?: SortOrder
     projectListId?: SortOrder
+  }
+
+  export type EnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[]
+    notIn?: $Enums.TaskStatus[]
+    not?: NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumTaskStatusFilter<$PrismaModel>
   }
 
   export type TaskScalarRelationFilter = {
@@ -9080,102 +7845,6 @@ export namespace Prisma {
   export type UserOnTaskSumOrderByAggregateInput = {
     taskId?: SortOrder
     userId?: SortOrder
-  }
-
-  export type EnumTaskStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TaskStatus[]
-    notIn?: $Enums.TaskStatus[]
-    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type StatusOrderByRelevanceInput = {
-    fields: StatusOrderByRelevanceFieldEnum | StatusOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type StatusCountOrderByAggregateInput = {
-    id?: SortOrder
-    taskStatus?: SortOrder
-    createAt?: SortOrder
-    updateAt?: SortOrder
-    feedback?: SortOrder
-    attachFile?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type StatusAvgOrderByAggregateInput = {
-    id?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type StatusMaxOrderByAggregateInput = {
-    id?: SortOrder
-    taskStatus?: SortOrder
-    createAt?: SortOrder
-    updateAt?: SortOrder
-    feedback?: SortOrder
-    attachFile?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type StatusMinOrderByAggregateInput = {
-    id?: SortOrder
-    taskStatus?: SortOrder
-    createAt?: SortOrder
-    updateAt?: SortOrder
-    feedback?: SortOrder
-    attachFile?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type StatusSumOrderByAggregateInput = {
-    id?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type EnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TaskStatus[]
-    notIn?: $Enums.TaskStatus[]
-    not?: NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTaskStatusFilter<$PrismaModel>
-    _max?: NestedEnumTaskStatusFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type UserOnProjectCreateNestedManyWithoutUserInput = {
@@ -9422,13 +8091,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectInput, UserUpdateWithoutProjectInput>, UserUncheckedUpdateWithoutProjectInput>
   }
 
-  export type StatusCreateNestedManyWithoutTaskInput = {
-    create?: XOR<StatusCreateWithoutTaskInput, StatusUncheckedCreateWithoutTaskInput> | StatusCreateWithoutTaskInput[] | StatusUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: StatusCreateOrConnectWithoutTaskInput | StatusCreateOrConnectWithoutTaskInput[]
-    createMany?: StatusCreateManyTaskInputEnvelope
-    connect?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-  }
-
   export type ProjectListCreateNestedOneWithoutTaskInput = {
     create?: XOR<ProjectListCreateWithoutTaskInput, ProjectListUncheckedCreateWithoutTaskInput>
     connectOrCreate?: ProjectListCreateOrConnectWithoutTaskInput
@@ -9449,13 +8111,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
-  export type StatusUncheckedCreateNestedManyWithoutTaskInput = {
-    create?: XOR<StatusCreateWithoutTaskInput, StatusUncheckedCreateWithoutTaskInput> | StatusCreateWithoutTaskInput[] | StatusUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: StatusCreateOrConnectWithoutTaskInput | StatusCreateOrConnectWithoutTaskInput[]
-    createMany?: StatusCreateManyTaskInputEnvelope
-    connect?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-  }
-
   export type UserOnTaskUncheckedCreateNestedManyWithoutTaskInput = {
     create?: XOR<UserOnTaskCreateWithoutTaskInput, UserOnTaskUncheckedCreateWithoutTaskInput> | UserOnTaskCreateWithoutTaskInput[] | UserOnTaskUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: UserOnTaskCreateOrConnectWithoutTaskInput | UserOnTaskCreateOrConnectWithoutTaskInput[]
@@ -9470,18 +8125,8 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
-  export type StatusUpdateManyWithoutTaskNestedInput = {
-    create?: XOR<StatusCreateWithoutTaskInput, StatusUncheckedCreateWithoutTaskInput> | StatusCreateWithoutTaskInput[] | StatusUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: StatusCreateOrConnectWithoutTaskInput | StatusCreateOrConnectWithoutTaskInput[]
-    upsert?: StatusUpsertWithWhereUniqueWithoutTaskInput | StatusUpsertWithWhereUniqueWithoutTaskInput[]
-    createMany?: StatusCreateManyTaskInputEnvelope
-    set?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    disconnect?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    delete?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    connect?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    update?: StatusUpdateWithWhereUniqueWithoutTaskInput | StatusUpdateWithWhereUniqueWithoutTaskInput[]
-    updateMany?: StatusUpdateManyWithWhereWithoutTaskInput | StatusUpdateManyWithWhereWithoutTaskInput[]
-    deleteMany?: StatusScalarWhereInput | StatusScalarWhereInput[]
+  export type EnumTaskStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TaskStatus
   }
 
   export type ProjectListUpdateOneRequiredWithoutTaskNestedInput = {
@@ -9518,20 +8163,6 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutTaskInput | UserUpdateWithWhereUniqueWithoutTaskInput[]
     updateMany?: UserUpdateManyWithWhereWithoutTaskInput | UserUpdateManyWithWhereWithoutTaskInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type StatusUncheckedUpdateManyWithoutTaskNestedInput = {
-    create?: XOR<StatusCreateWithoutTaskInput, StatusUncheckedCreateWithoutTaskInput> | StatusCreateWithoutTaskInput[] | StatusUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: StatusCreateOrConnectWithoutTaskInput | StatusCreateOrConnectWithoutTaskInput[]
-    upsert?: StatusUpsertWithWhereUniqueWithoutTaskInput | StatusUpsertWithWhereUniqueWithoutTaskInput[]
-    createMany?: StatusCreateManyTaskInputEnvelope
-    set?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    disconnect?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    delete?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    connect?: StatusWhereUniqueInput | StatusWhereUniqueInput[]
-    update?: StatusUpdateWithWhereUniqueWithoutTaskInput | StatusUpdateWithWhereUniqueWithoutTaskInput[]
-    updateMany?: StatusUpdateManyWithWhereWithoutTaskInput | StatusUpdateManyWithWhereWithoutTaskInput[]
-    deleteMany?: StatusScalarWhereInput | StatusScalarWhereInput[]
   }
 
   export type UserOnTaskUncheckedUpdateManyWithoutTaskNestedInput = {
@@ -9588,28 +8219,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutUserOnTaskInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserOnTaskInput, UserUpdateWithoutUserOnTaskInput>, UserUncheckedUpdateWithoutUserOnTaskInput>
-  }
-
-  export type TaskCreateNestedOneWithoutStatusInput = {
-    create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput>
-    connectOrCreate?: TaskCreateOrConnectWithoutStatusInput
-    connect?: TaskWhereUniqueInput
-  }
-
-  export type EnumTaskStatusFieldUpdateOperationsInput = {
-    set?: $Enums.TaskStatus
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
-  export type TaskUpdateOneRequiredWithoutStatusNestedInput = {
-    create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput>
-    connectOrCreate?: TaskCreateOrConnectWithoutStatusInput
-    upsert?: TaskUpsertWithoutStatusInput
-    connect?: TaskWhereUniqueInput
-    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutStatusInput, TaskUpdateWithoutStatusInput>, TaskUncheckedUpdateWithoutStatusInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -9787,21 +8396,6 @@ export namespace Prisma {
     not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TaskStatus[]
@@ -9810,24 +8404,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTaskStatusFilter<$PrismaModel>
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type UserOnProjectCreateWithoutUserInput = {
@@ -9852,10 +8428,10 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
-    status?: StatusCreateNestedManyWithoutTaskInput
     ProjectList: ProjectListCreateNestedOneWithoutTaskInput
     assignTo?: UserOnTaskCreateNestedManyWithoutTaskInput
   }
@@ -9865,11 +8441,11 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
     projectListId: number
-    status?: StatusUncheckedCreateNestedManyWithoutTaskInput
     assignTo?: UserOnTaskUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -9935,10 +8511,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StatusUpdateManyWithoutTaskNestedInput
     ProjectList?: ProjectListUpdateOneRequiredWithoutTaskNestedInput
     assignTo?: UserOnTaskUpdateManyWithoutTaskNestedInput
   }
@@ -9948,11 +8524,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     projectListId?: IntFieldUpdateOperationsInput | number
-    status?: StatusUncheckedUpdateManyWithoutTaskNestedInput
     assignTo?: UserOnTaskUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -10002,10 +8578,10 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
-    status?: StatusCreateNestedManyWithoutTaskInput
     assignTo?: UserOnTaskCreateNestedManyWithoutTaskInput
     User?: UserCreateNestedManyWithoutTaskInput
   }
@@ -10015,10 +8591,10 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
-    status?: StatusUncheckedCreateNestedManyWithoutTaskInput
     assignTo?: UserOnTaskUncheckedCreateNestedManyWithoutTaskInput
     User?: UserUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -10073,6 +8649,7 @@ export namespace Prisma {
     name?: StringFilter<"Task"> | string
     detail?: StringFilter<"Task"> | string
     priority?: IntFilter<"Task"> | number
+    taskStatus?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     createAt?: DateTimeFilter<"Task"> | Date | string
     updateAt?: DateTimeFilter<"Task"> | Date | string
     dueDate?: DateTimeFilter<"Task"> | Date | string
@@ -10223,33 +8800,6 @@ export namespace Prisma {
     UserOnTask?: UserOnTaskUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type StatusCreateWithoutTaskInput = {
-    taskStatus?: $Enums.TaskStatus
-    createAt?: Date | string
-    updateAt?: Date | string
-    feedback?: string | null
-    attachFile?: string | null
-  }
-
-  export type StatusUncheckedCreateWithoutTaskInput = {
-    id?: number
-    taskStatus?: $Enums.TaskStatus
-    createAt?: Date | string
-    updateAt?: Date | string
-    feedback?: string | null
-    attachFile?: string | null
-  }
-
-  export type StatusCreateOrConnectWithoutTaskInput = {
-    where: StatusWhereUniqueInput
-    create: XOR<StatusCreateWithoutTaskInput, StatusUncheckedCreateWithoutTaskInput>
-  }
-
-  export type StatusCreateManyTaskInputEnvelope = {
-    data: StatusCreateManyTaskInput | StatusCreateManyTaskInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ProjectListCreateWithoutTaskInput = {
     name: string
     priority: number
@@ -10337,35 +8887,6 @@ export namespace Prisma {
   export type UserCreateManyTaskInputEnvelope = {
     data: UserCreateManyTaskInput | UserCreateManyTaskInput[]
     skipDuplicates?: boolean
-  }
-
-  export type StatusUpsertWithWhereUniqueWithoutTaskInput = {
-    where: StatusWhereUniqueInput
-    update: XOR<StatusUpdateWithoutTaskInput, StatusUncheckedUpdateWithoutTaskInput>
-    create: XOR<StatusCreateWithoutTaskInput, StatusUncheckedCreateWithoutTaskInput>
-  }
-
-  export type StatusUpdateWithWhereUniqueWithoutTaskInput = {
-    where: StatusWhereUniqueInput
-    data: XOR<StatusUpdateWithoutTaskInput, StatusUncheckedUpdateWithoutTaskInput>
-  }
-
-  export type StatusUpdateManyWithWhereWithoutTaskInput = {
-    where: StatusScalarWhereInput
-    data: XOR<StatusUpdateManyMutationInput, StatusUncheckedUpdateManyWithoutTaskInput>
-  }
-
-  export type StatusScalarWhereInput = {
-    AND?: StatusScalarWhereInput | StatusScalarWhereInput[]
-    OR?: StatusScalarWhereInput[]
-    NOT?: StatusScalarWhereInput | StatusScalarWhereInput[]
-    id?: IntFilter<"Status"> | number
-    taskStatus?: EnumTaskStatusFilter<"Status"> | $Enums.TaskStatus
-    createAt?: DateTimeFilter<"Status"> | Date | string
-    updateAt?: DateTimeFilter<"Status"> | Date | string
-    feedback?: StringNullableFilter<"Status"> | string | null
-    attachFile?: StringNullableFilter<"Status"> | string | null
-    taskId?: IntFilter<"Status"> | number
   }
 
   export type ProjectListUpsertWithoutTaskInput = {
@@ -10458,10 +8979,10 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
-    status?: StatusCreateNestedManyWithoutTaskInput
     ProjectList: ProjectListCreateNestedOneWithoutTaskInput
     User?: UserCreateNestedManyWithoutTaskInput
   }
@@ -10471,11 +8992,11 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
     projectListId: number
-    status?: StatusUncheckedCreateNestedManyWithoutTaskInput
     User?: UserUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -10535,10 +9056,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StatusUpdateManyWithoutTaskNestedInput
     ProjectList?: ProjectListUpdateOneRequiredWithoutTaskNestedInput
     User?: UserUpdateManyWithoutTaskNestedInput
   }
@@ -10548,11 +9069,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     projectListId?: IntFieldUpdateOperationsInput | number
-    status?: StatusUncheckedUpdateManyWithoutTaskNestedInput
     User?: UserUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -10598,72 +9119,6 @@ export namespace Prisma {
     project?: UserOnProjectUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type TaskCreateWithoutStatusInput = {
-    name: string
-    detail: string
-    priority: number
-    createAt?: Date | string
-    updateAt?: Date | string
-    dueDate: Date | string
-    ProjectList: ProjectListCreateNestedOneWithoutTaskInput
-    assignTo?: UserOnTaskCreateNestedManyWithoutTaskInput
-    User?: UserCreateNestedManyWithoutTaskInput
-  }
-
-  export type TaskUncheckedCreateWithoutStatusInput = {
-    id?: number
-    name: string
-    detail: string
-    priority: number
-    createAt?: Date | string
-    updateAt?: Date | string
-    dueDate: Date | string
-    projectListId: number
-    assignTo?: UserOnTaskUncheckedCreateNestedManyWithoutTaskInput
-    User?: UserUncheckedCreateNestedManyWithoutTaskInput
-  }
-
-  export type TaskCreateOrConnectWithoutStatusInput = {
-    where: TaskWhereUniqueInput
-    create: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput>
-  }
-
-  export type TaskUpsertWithoutStatusInput = {
-    update: XOR<TaskUpdateWithoutStatusInput, TaskUncheckedUpdateWithoutStatusInput>
-    create: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput>
-    where?: TaskWhereInput
-  }
-
-  export type TaskUpdateToOneWithWhereWithoutStatusInput = {
-    where?: TaskWhereInput
-    data: XOR<TaskUpdateWithoutStatusInput, TaskUncheckedUpdateWithoutStatusInput>
-  }
-
-  export type TaskUpdateWithoutStatusInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    detail?: StringFieldUpdateOperationsInput | string
-    priority?: IntFieldUpdateOperationsInput | number
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    ProjectList?: ProjectListUpdateOneRequiredWithoutTaskNestedInput
-    assignTo?: UserOnTaskUpdateManyWithoutTaskNestedInput
-    User?: UserUpdateManyWithoutTaskNestedInput
-  }
-
-  export type TaskUncheckedUpdateWithoutStatusInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    detail?: StringFieldUpdateOperationsInput | string
-    priority?: IntFieldUpdateOperationsInput | number
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    projectListId?: IntFieldUpdateOperationsInput | number
-    assignTo?: UserOnTaskUncheckedUpdateManyWithoutTaskNestedInput
-    User?: UserUncheckedUpdateManyWithoutTaskNestedInput
-  }
-
   export type UserOnProjectCreateManyUserInput = {
     projectListId: number
   }
@@ -10705,6 +9160,7 @@ export namespace Prisma {
     name: string
     detail: string
     priority: number
+    taskStatus?: $Enums.TaskStatus
     createAt?: Date | string
     updateAt?: Date | string
     dueDate: Date | string
@@ -10726,10 +9182,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StatusUpdateManyWithoutTaskNestedInput
     assignTo?: UserOnTaskUpdateManyWithoutTaskNestedInput
     User?: UserUpdateManyWithoutTaskNestedInput
   }
@@ -10739,10 +9195,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StatusUncheckedUpdateManyWithoutTaskNestedInput
     assignTo?: UserOnTaskUncheckedUpdateManyWithoutTaskNestedInput
     User?: UserUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -10752,18 +9208,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     detail?: StringFieldUpdateOperationsInput | string
     priority?: IntFieldUpdateOperationsInput | number
+    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type StatusCreateManyTaskInput = {
-    id?: number
-    taskStatus?: $Enums.TaskStatus
-    createAt?: Date | string
-    updateAt?: Date | string
-    feedback?: string | null
-    attachFile?: string | null
   }
 
   export type UserOnTaskCreateManyTaskInput = {
@@ -10782,32 +9230,6 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     department: string
-  }
-
-  export type StatusUpdateWithoutTaskInput = {
-    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedback?: NullableStringFieldUpdateOperationsInput | string | null
-    attachFile?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type StatusUncheckedUpdateWithoutTaskInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedback?: NullableStringFieldUpdateOperationsInput | string | null
-    attachFile?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type StatusUncheckedUpdateManyWithoutTaskInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    taskStatus?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedback?: NullableStringFieldUpdateOperationsInput | string | null
-    attachFile?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserOnTaskUpdateWithoutTaskInput = {
